@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - FreeBooks Digital Library</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<!-- Header Section -->
+<header>
+    <div class="header-container">
+        <div class="logo">
+            <a href="index.html">
+                <h1>FreeBooks</h1>
+            </a>
+        </div>
+
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li id="savedItems" style="display: none;"><a href="saved.html">Saved Items</a></li>
+                <li id="userNav"></li> <!-- Placeholder for user name -->
+                <li><a href="login.html" id="loginButton" style="display: none;">Login</a></li>
+                <li><a href="#" id="logoutBtn" style="display: none;">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main>
+    <h1>About FreeBooks Digital Library</h1>
+    <section>
+        <h2>Our Mission</h2>
+        <p>At <strong>FreeBooks Digital Library</strong>, we believe that knowledge should be accessible to everyone, regardless of their background or financial situation. Our mission is to provide readers with a vast collection of literary works, from classic literature to contemporary novels, academic texts, and more.</p>
+    </section>
+
+    <section>
+        <h2>Our Platform</h2>
+        <p>We understand the joy of reading and the importance of learning. That’s why we’ve curated a user-friendly platform that allows you to search for, discover, and enjoy books without the need for registration or fees. Simply browse our extensive catalog, find your next read, and dive into the world of literature.</p>
+    </section>
+
+    <section>
+        <h2>For Everyone</h2>
+        <p>Whether you are a student, a professional, or simply a book lover, we are dedicated to helping you expand your knowledge and enjoy the art of reading. Join us in our mission to promote literacy and learning for all!</p>
+    </section>
+
+    <section>
+        <h2>Happy Reading!</h2>
+        <p>Explore our collection and find your next great read!</p>
+    </section>
+</main>
+
+<!-- Footer Section -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="#">Terms of Use</a>
+            <a href="#">Copyright & Trademark</a>
+            <a href="#">Privacy</a>
+            <a href="#">Your Privacy Choices</a>
+            <a href="#">Accessibility</a>
+            <a href="#">Cookie Policy</a>
+            <a href="#">Sitemap</a>
+        </div>
+        <div class="footer-copyright">
+            <p>©2024 FreeBooks, Inc. 403 Main Street, Grambling, LA 71245</p>
+        </div>
+    </div>
+</footer>
+<script src="js/zoomControl.js" defer></script>
+<script src="js/script.js"></script>
+<!-- JavaScript for Navbar Behavior -->
+<script>
+    // Update navbar based on user login status
+    function updateNavbar() {
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if (user) {
+            document.getElementById('userNav').innerHTML = `<a href="/profile.html">${user.username}</a>`;
+            document.getElementById('savedItems').style.display = 'inline';
+            document.getElementById('logoutBtn').style.display = 'inline';
+            document.getElementById('loginButton').style.display = 'none';
+        } else {
+            document.getElementById('userNav').innerHTML = '';
+            document.getElementById('savedItems').style.display = 'none';
+            document.getElementById('logoutBtn').style.display = 'none';
+            document.getElementById('loginButton').style.display = 'inline';
+        }
+    }
+
+    // Logout functionality
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        alert('Logged out successfully!');
+        window.location.href = 'index.html';
+    });
+
+    // Initialize navbar on page load
+    window.onload = updateNavbar;
+</script>
+
+</body>
+</html>

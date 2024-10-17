@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - FreeBooks Digital Library</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="register.css"> <!-- Link to the new CSS file -->
+</head>
+
+<body>
+<!-- Header Section -->
+<header>
+    <div class="header-container">
+        <div class="logo">
+            <a href="index.html">
+                <h1>FreeBooks</h1>
+            </a>
+        </div>
+        <nav class="navbar">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="registration-content">
+        <h1>Register</h1>
+        <form id="registrationForm" class="form-container">
+            <input type="text" placeholder="Username" name="username" required>
+            <input type="email" placeholder="Email" name="email" required>
+            <input type="password" placeholder="Password" name="password" required>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="#">Terms of Use</a>
+            <a href="#">Copyright & Trademark</a>
+            <a href="#">Privacy</a>
+            <a href="#">Your Privacy Choices</a>
+            <a href="#">Accessibility</a>
+            <a href="#">Cookie Policy</a>
+            <a href="#">Sitemap</a>
+        </div>
+        <div class="footer-copyright">
+            <p>©2024 FreeBooks, Inc. 403 Main Street, Grambling, LA 71245</p>
+        </div>
+    </div>
+</footer>
+<script src="js/zoomControl.js" defer></script>
+
+<!-- JavaScript for form submission -->
+<script>
+    document.getElementById('registrationForm').addEventListener('submit', async (event) => {
+        event.preventDefault(); // Prevent default form submission
+
+        const formData = new FormData(event.target);
+        const data = {
+            username: formData.get('username'),
+            email: formData.get('email'),
+            password: formData.get('password')
+        };
+
+        try {
+            const response = await fetch('/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                alert('Registration successful! Please log in.');
+                window.location.href = 'login.html'; // Redirect to login page
+            } else {
+                alert(result.message || 'Registration failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again later.');
+        }
+    });
+</script>
+</body>
+
+</html>

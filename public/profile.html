@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - FreeBooks Digital Library</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+<!-- Header Section -->
+<header>
+    <div class="header-container">
+        <div class="logo">
+            <a href="index.html">
+                <h1>FreeBooks</h1>
+            </a>
+        </div>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li id="userNav"></li> <!-- Placeholder for user name -->
+                <li id="savedItems" style="display: none;"><a href="saved.html">Saved Items</a></li>
+                <li><a href="login.html" id="loginButton">Login</a></li>
+                <li><a href="#" id="logoutBtn" style="display: none;">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="profile-container">
+    <h1>Your Profile</h1>
+    <div id="profileInfo" class="profile-info"></div>
+
+    <h2>Update Profile</h2>
+    <form id="updateProfileForm" class="form-container">
+        <input type="text" placeholder="Username" name="username" required />
+        <input type="email" placeholder="Email" name="email" required />
+        <button type="submit">Update Profile</button>
+    </form>
+</main>
+
+<!-- Footer Section -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="#">Terms of Use</a>
+            <a href="#">Copyright & Trademark</a>
+            <a href="#">Privacy</a>
+            <a href="#">Your Privacy Choices</a>
+            <a href="#">Accessibility</a>
+            <a href="#">Cookie Policy</a>
+            <a href="#">Sitemap</a>
+        </div>
+        <div class="footer-copyright">
+            <p>©2024 FreeBooks, Inc. 403 Main Street, Grambling, LA 71245</p>
+        </div>
+    </div>
+</footer>
+<script src="js/zoomControl.js" defer></script>
+<!-- JavaScript -->
+<script src="js/script.js"></script>
+<script>
+    async function loadProfile() {
+        const token = localStorage.getItem('token');
+        const response = await fetch('/profile', {
+            headers: { 'Authorization': `Bearer ${token}` },
+        });
+        const data = await response.json();
+        document.getElementById('profileInfo').innerHTML = `<p><strong>Username:</strong> ${data.username}</p><p><strong>Email:</strong> ${data.email}</p>`;
+    }
+
+    document.getElementById('updateProfileForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const token = localStorage.getItem('token');
+        const response = await fetch('/profile', {
+            method: 'PUT',
+            body: JSON.stringify(Object.fromEntries(formData)),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+        const data = await response.json();
+        alert(data.message);
+        loadProfile(); // Refresh profile info
+    });
+
+    loadProfile(); // Load the profile when the page loads
+
+    // Navbar Update on Page Load
+    window.onload = updateNavbar;
+</script>
+</body>
+
+</html>

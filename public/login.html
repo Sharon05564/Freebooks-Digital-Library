@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FreeBooks Digital Library</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="login.css"> <!-- Link to the new CSS file -->
+</head>
+
+<body>
+<!-- Header Section -->
+<header>
+    <div class="header-container">
+        <div class="logo">
+            <a href="index.html">
+                <h1>FreeBooks</h1>
+            </a>
+        </div>
+        <nav class="navbar">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li id="savedItems" style="display: none;"><a href="/saved.html">Saved Items</a></li>
+                <li id="userNav"></li> <!-- Placeholder for user name -->
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="login-content">
+        <h1>Login</h1>
+        <form id="loginForm" class="form-container">
+            <input type="email" placeholder="Email" name="email" required />
+            <input type="password" placeholder="Password" name="password" required />
+            <button type="submit">Login</button>
+        </form>
+        <p>New to FreeBooks? <a href="register.html">Create an account</a></p>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="#">Terms of Use</a>
+            <a href="#">Copyright & Trademark</a>
+            <a href="#">Privacy</a>
+            <a href="#">Your Privacy Choices</a>
+            <a href="#">Accessibility</a>
+            <a href="#">Cookie Policy</a>
+            <a href="#">Sitemap</a>
+        </div>
+        <div class="footer-content">
+            <p>©2024 FreeBooks, Inc. 403 Main Street, Grambling, LA 71245</p>
+        </div>
+    </div>
+</footer>
+<script src="js/zoomControl.js" defer></script>
+<script>
+    // Handle login form submission
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+
+        try {
+            const response = await fetch('/auth/login', {
+                method: 'POST',
+                body: JSON.stringify(Object.fromEntries(formData)),
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                // Store token and user info
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+
+                alert('Login successful!');
+                window.location.href = '/'; // Redirect to homepage
+            } else {
+                alert(data.message || 'Login failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again later.');
+        }
+    });
+
+    // Dynamically update navbar based on login status
+    function updateNavbar() {
+        const user = JSON.parse(localStorage.getItem('user')); // Retrieve user data
+
+        if (user) {
+            document.getElementById('userNav').innerHTML = `<a href="/profile.html">${user.username}</a>`;
+            document.getElementById('savedItems').style.display = 'inline'; // Show saved items link
+        } else {
+            document.getElementById('userNav').innerHTML = '<a href="/login.html">Login</a>';
+            document.getElementById('savedItems').style.display = 'none'; // Hide saved items link
+        }
+    }
+
+    // Call updateNavbar on page load
+    window.onload = updateNavbar;
+</script>
+</body>
+
+</html>
