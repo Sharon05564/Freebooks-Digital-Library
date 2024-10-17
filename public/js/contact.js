@@ -1,5 +1,5 @@
 document.getElementById('contactForm').addEventListener('submit', function (event) {
-    event.preventDefault(); // Prevent the form from submitting normally
+    event.preventDefault();
 
     // Gather form data
     const formData = {
@@ -9,7 +9,7 @@ document.getElementById('contactForm').addEventListener('submit', function (even
         message: document.getElementById('message').value,
     };
 
-    // Send the form data to your server (adjust the URL to your endpoint)
+    // Send the form data to your server
     fetch('/api/sendMessage', {
         method: 'POST',
         headers: {

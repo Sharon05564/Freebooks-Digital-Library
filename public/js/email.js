@@ -1,4 +1,4 @@
-// email.js
+
 const nodemailer = require('nodemailer');
 require('dotenv').config(); // Load environment variables
 
@@ -7,25 +7,25 @@ const sendEmail = async (formData) => {
     const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 546,
-        secure: false, // True for port 465, false for port 587
+        secure: false,
         auth: {
-            user: process.env.EMAIL_USER, // Your email address
-            pass: process.env.EMAIL_PASS, // App password or email password
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
         },
     });
 
     // Set up email data
     const mailOptions = {
         from: formData.email, // Sender address
-        to: 'sharonowusu05564@gmail.com', // Receiver (your email)
+        to: 'sharonowusu05564@gmail.com', // Receiver
         subject: formData.subject || 'No Subject', // Subject line
         text: `From: ${formData.name} <${formData.email}>\n\n${formData.message}`, // Plain text body
     };
 
     // Send the email
     try {
-        const info = await transporter.sendMail(mailOptions); // Fix: Save the response
-        console.log('Message sent: %s', info.messageId); // Display message ID
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Message sent: %s', info.messageId);
         return true;
     } catch (error) {
         console.error('Error sending email:', error); // Log any error
