@@ -1,4 +1,5 @@
-const apiKey = 'AIzaSyAczTBR1LOL_OcJb_EOFfzEg440go6Z2hw'; // Replace with your actual Google Books API key
+
+const apiKey = 'AIzaSyAczTBR1LOL_OcJb_EOFfzEg440go6Z2hw';
 
 async function fetchTrendingBooks() {
     try {

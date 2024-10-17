@@ -1,6 +1,6 @@
 const express = require('express');
-const User = require('models/user.js'); // Ensure you have this model defined
-const authMiddleware = require('middleware/authMiddleware.js'); // Your JWT verification middleware
+const User = require('models/user.js');
+const authMiddleware = require('middleware/authMiddleware.js');
 const router = express.Router();
 
 // Get User Profile

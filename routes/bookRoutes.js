@@ -22,13 +22,13 @@ router.get('/search', async (req, res) => {
             params: {
                 q: query,
                 filter: 'free-ebooks',
-                startIndex: parseInt(startIndex), // Ensure it's an integer
-                maxResults: parseInt(maxResults), // Ensure it's an integer
+                startIndex: parseInt(0), //
+                maxResults: parseInt(10), //
                 key: apiKey,
             },
         });
 
-        const books = response.data.items || []; // Default to empty array if no items
+        const books = response.data.items || [];
         res.json(books);
     } catch (error) {
         console.error('Error fetching books:', error.message);

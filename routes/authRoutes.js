@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt'); // For password hashing
-const jwt = require('jsonwebtoken'); // For generating JWT tokens
-const passport = require('../config/passport.js'); // For Google OAuth
-const User = require('../models/user'); // Adjust the path to your user model
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const passport = require('../config/passport.js');
+const User = require('../models/user');
 
 // Helper function to validate user input
 const validateInput = (email, password) => {
@@ -17,14 +17,14 @@ const validateInput = (email, password) => {
 function clearExistingSession(res) {
     console.log('Clearing existing session cookies...');
     res.clearCookie('jwt'); // Clear the cookie (if used)
-    res.setHeader('Set-Cookie', 'jwt=; HttpOnly; Path=/; Max-Age=0'); // Invalidate cookie
-    res.setHeader('Authorization', ''); // Clear any authorization headers if present
+    res.setHeader('Set-Cookie', 'jwt=; HttpOnly; Path=/; Max-Age=0');
+    res.setHeader('Authorization', '');
 }
 
 // User Registration
 router.post('/register', async (req, res) => {
     try {
-        const { username, email, password } = req.body; // Ensure email is included
+        const { username, email, password } = req.body;
 
         // Validate input
         const { valid, message } = validateInput(email, password);

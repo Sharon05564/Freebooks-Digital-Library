@@ -18,14 +18,14 @@ passport.deserializeUser(async (id, done) => {
     }
 });
 
-// Google Sign-In Strategy
+
 passport.use('google-signin', new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: "/auth/google/callback"
 }, async (token, tokenSecret, profile, done) => {
     try {
-        // Check if user exists in the database based on Google ID
+
         let existingUser = await User.findOne({ where: { googleId: profile.id } });
 
         if (existingUser) {
@@ -61,7 +61,7 @@ passport.use('google-signup', new GoogleStrategy({
             googleId: profile.id,
             username: newUsername,
             email: profile.emails[0].value,
-            password: null // Since this is a Google user, there's no local password
+            password: null
         });
 
         return done(null, newUser);

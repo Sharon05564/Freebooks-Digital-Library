@@ -1,4 +1,4 @@
-// autocomplete.js
+
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('searchInput');
     const suggestionsList = document.getElementById('suggestions');
@@ -30,8 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
             listItem.textContent = book.title;
             listItem.addEventListener('click', () => {
                 searchInput.value = book.title;
-                suggestionsList.innerHTML = ''; // Clear suggestions
-                // Optionally, trigger a search or redirect to the book's page
+                suggestionsList.innerHTML = '';
             });
             suggestionsList.appendChild(listItem);
         });

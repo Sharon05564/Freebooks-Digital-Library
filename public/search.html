@@ -68,7 +68,7 @@
 <!-- Search Container -->
 <main class="search-container">
     <h1>Search Results</h1>
-    <div id="results" class="book-container"></div> <!-- Results will be displayed here -->
+    <div id="results" class="book-container"></div>
 
     <!-- Pagination Buttons -->
     <div class="pagination">
@@ -171,7 +171,7 @@
             const imageUrl = book.volumeInfo?.imageLinks?.thumbnail || 'https://via.placeholder.com/128x190?text=No+Cover';
             const pdfLink = book.accessInfo?.pdf?.downloadLink;
             const infoLink = book.volumeInfo?.infoLink;
-            const bookLink = pdfLink || infoLink || '#'; // Ensure at least one link exists
+            const bookLink = pdfLink || infoLink || '#';
 
             // Properly escape single quotes to avoid breaking the JavaScript string
             const safeTitle = title.replace(/'/g, "\\'");
@@ -228,7 +228,7 @@
     }
 
     async function saveItem(bookId, title, authors, imageUrl, bookLink, event) {
-        event.stopPropagation(); // Prevent the popup from closing when clicking the save button
+        event.stopPropagation();
 
         const user = JSON.parse(localStorage.getItem('user'));
 
@@ -238,13 +238,13 @@
         }
 
         try {
-            const response = await fetch('/api/saved', {  // Adjusted to match your route '/api/saved'
+            const response = await fetch('/api/saved', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
-                body: JSON.stringify({ bookId, title, authors, imageUrl, bookLink }) // Ensure bookLink is sent
+                body: JSON.stringify({ bookId, title, authors, imageUrl, bookLink })
             });
 
             if (!response.ok) {
@@ -258,7 +258,7 @@
                 throw new Error('Error saving book.');
             }
 
-            alert('Book saved successfully!'); // Optional alert to confirm save action
+            alert('Book saved successfully!');
         } catch (error) {
             console.error('Error saving book:', error);
             alert('Book already Saved.');
