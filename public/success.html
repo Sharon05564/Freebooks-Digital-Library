@@ -1,0 +1,47 @@
+<!-- success.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreeBooks - Successful Login</title>
+    <script src="js/zoomControl.js" defer></script>
+    <script>
+        // Extract token from query parameters and store in localStorage
+        window.onload = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+
+            // Log the token received from the server
+            console.log('Received token from server:', token);
+
+            if (token) {
+                localStorage.setItem('token', token);
+
+                // Decode token to get user details and store in localStorage
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                const user = {
+                    username: payload.username,
+                    id: payload.userId,
+                    email: payload.email,
+                };
+
+                // Log the extracted user details
+                console.log('Decoded user details from token:', user);
+
+
+                localStorage.setItem('user', JSON.stringify(user));
+
+                // Redirect user to the homepage or user-specific area
+                window.location.href = '/';
+            } else {
+                alert('Failed to authenticate. Please try again.');
+                window.location.href = '/login.html';
+            }
+        };
+    </script>
+</head>
+<body>
+<p>Redirecting...</p>
+</body>
+</html>

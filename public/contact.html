@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - FreeBooks Digital Library</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="js/contact.js" defer></script> <!-- Include the new JavaScript file -->
+    <script src="js/script.js" defer></script> <!-- Include the main script for navbar functionality -->
+
+</head>
+
+<body>
+
+<!-- Header Section -->
+<header>
+    <div class="header-container">
+        <div class="logo">
+            <a href="index.html">
+                <h1>FreeBooks</h1>
+            </a>
+        </div>
+
+        <nav class="navbar">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li id="savedItems" style="display: none;"><a href="/saved.html">Saved Items</a></li>
+                <li id="userNav"></li> <!-- Placeholder for user name -->
+                <li><a href="login.html" id="loginButton" style="display: none;">Login</a></li>
+                <li><a href="#" id="logoutBtn" style="display: none;">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main>
+    <h1>Contact Us</h1>
+
+    <section>
+        <h2>Get in Touch</h2>
+        <p>If you have any questions, suggestions, or feedback, feel free to reach out to us!</p>
+    </section>
+
+    <section>
+        <h2>Contact Information</h2>
+        <p>Email: <a href="mailto:support@freebooks.com">support@freebooks.com</a></p>
+        <p>Phone: +1 (555) 123-4567</p>
+        <p>Address: 403 Main Street, Grambling, LA 71245</p>
+    </section>
+
+    <section>
+        <h2>Contact Form</h2>
+        <form id="contactForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" name="subject">
+
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+
+            <button type="submit">Send Message</button>
+        </form>
+    </section>
+
+    <section>
+        <h2>Follow Us</h2>
+        <p>Connect with us on social media!</p>
+        <ul class="social-media-links">
+            <li>
+                <a href="https://www.facebook.com/share/PxcxoYMbJRTa6g2y/?mibextid=LQQJ4d" target="_blank">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+            </li>
+            <li>
+                <a href="https://www.twitter.com/Sharon_owusu1" target="_blank">
+                    <i class="fab fa-twitter"></i>
+                </a>
+            </li>
+            <li>
+                <a href="https://www.instagram.com/sharon_deezy" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </li>
+        </ul>
+    </section>
+</main>
+
+<!-- Footer Section -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="#">Terms of Use</a>
+            <a href="#">Copyright & Trademark</a>
+            <a href="#">Privacy</a>
+            <a href="#">Your Privacy Choices</a>
+            <a href="#">Accessibility</a>
+            <a href="#">Cookie Policy</a>
+            <a href="#">Sitemap</a>
+        </div>
+        <div class="footer-copyright">
+            <p>©2024 FreeBooks, Inc. 403 Main Street, Grambling, LA 71245</p>
+        </div>
+    </div>
+</footer>
+<script src="js/zoomControl.js" defer></script>
+<!-- JavaScript for navbar behavior -->
+<script>
+    // Update navbar based on user login status
+    function updateNavbar() {
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if (user) {
+            document.getElementById('userNav').innerHTML = `<a href="/profile.html">${user.username}</a>`;
+            document.getElementById('savedItems').style.display = 'inline';
+            document.getElementById('logoutBtn').style.display = 'inline';
+            document.getElementById('loginButton').style.display = 'none';
+        } else {
+            document.getElementById('userNav').innerHTML = '';
+            document.getElementById('savedItems').style.display = 'none';
+            document.getElementById('logoutBtn').style.display = 'none';
+            document.getElementById('loginButton').style.display = 'inline';
+        }
+    }
+
+    // Logout function
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        alert('Logged out successfully!');
+        window.location.href = 'index.html';
+    });
+
+    // Handle login modal
+    document.getElementById('loginButton').addEventListener('click', (event) => {
+        event.preventDefault();
+        document.getElementById('authModal').style.display = 'block';
+    });
+
+    document.getElementById('closeModal').addEventListener('click', () => {
+        document.getElementById('authModal').style.display = 'none';
+    });
+
+    window.onclick = (event) => {
+        const modal = document.getElementById('authModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+
+    document.getElementById('loginOption').addEventListener('click', () => {
+        window.location.href = 'login.html';
+    });
+
+    document.getElementById('registerOption').addEventListener('click', () => {
+        window.location.href = 'register.html';
+    });
+
+    window.onload = updateNavbar;
+</script>
+
+</body>
+</html>

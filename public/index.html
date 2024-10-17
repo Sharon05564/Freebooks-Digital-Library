@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreeBooks Digital Library</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /*!* Modal Styles *!*/
+        /*.modal {*/
+        /*    display: none;*/
+        /*    position: fixed;*/
+        /*    z-index: 1;*/
+        /*    left: 0;*/
+        /*    top: 0;*/
+        /*    width: 100%;*/
+        /*    height: 100%;*/
+        /*    background-color: rgba(0, 0, 0, 0.4);*/
+        /*}*/
+
+        /*.modal-content {*/
+        /*    background-color: #fefefe;*/
+        /*    margin: 15% auto;*/
+        /*    padding: 20px;*/
+        /*    border: 1px solid #888;*/
+        /*    width: 80%;*/
+        /*}*/
+
+        /*.close {*/
+        /*    color: #aaa;*/
+        /*    float: right;*/
+        /*    font-size: 28px;*/
+        /*    font-weight: bold;*/
+        /*}*/
+
+        /*.close:hover,*/
+        /*.close:focus {*/
+        /*    color: black;*/
+        /*    text-decoration: none;*/
+        /*    cursor: pointer;*/
+        /*}*/
+    </style>
+</head>
+
+<body class="home">
+
+<!-- Header Section -->
+<header>
+    <div class="header-container">
+        <div class="logo">
+            <a href="index.html">
+                <h1>FreeBooks</h1>
+            </a>
+        </div>
+
+        <nav class="navbar">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li id="savedItems" style="display: none;"><a href="/saved.html">Saved Items</a></li>
+                <li id="userNav"></li> <!-- Placeholder for user name -->
+                <li><a href="login.html" id="loginButton">Login</a></li> <!-- Updated to direct to login.html -->
+                <li><a href="#" id="logoutBtn" style="display: none;">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="search-container">
+    <h1>FreeBooks Digital Library</h1>
+    <h2>Search for Free Books</h2>
+
+    <div class="search-bar">
+        <input type="text" id="searchBar" placeholder="Enter book title or author">
+        <select id="categorySelect">
+            <option value="">All Categories</option>
+            <option value="fiction">Fiction</option>
+            <option value="nonfiction">Non-Fiction</option>
+            <option value="science">Science</option>
+        </select>
+        <button id="searchBtn">Search</button>
+    </div>
+
+    <div id="trending-books">
+        <h2>Trending Free Books</h2>
+        <div id="trending-books-list"></div>
+    </div>
+
+    <div id="results"></div>
+
+    <div class="pagination">
+        <button id="prevBtn">Previous</button>
+        <button id="nextBtn">Next</button>
+    </div>
+</main>
+
+<!-- Footer Section -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="#">Terms of Use</a>
+            <a href="#">Copyright & Trademark</a>
+            <a href="#">Privacy</a>
+            <a href="#">Accessibility</a>
+            <a href="#">Cookie Policy</a>
+        </div>
+        <p>©2024 FreeBooks, Inc. 403 Main Street, Grambling, LA 71245</p>
+    </div>
+</footer>
+<script src="js/zoomControl.js" defer></script>
+<script src="js/trending.js"></script>
+<script src="js/script.js"></script>
+
+<script>
+    // Function to update navbar on page load
+    function updateNavbar() {
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if (user) {
+            document.getElementById('userNav').innerHTML = `<a href="/profile.html">${user.username}</a>`;
+            document.getElementById('savedItems').style.display = 'inline';
+            document.getElementById('logoutBtn').style.display = 'inline';
+            document.getElementById('loginButton').style.display = 'none';
+        } else {
+            document.getElementById('userNav').innerHTML = '';
+            document.getElementById('savedItems').style.display = 'none';
+            document.getElementById('logoutBtn').style.display = 'none';
+            document.getElementById('loginButton').style.display = 'inline';
+        }
+    }
+
+    // Logout function
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        document.cookie = "jwt=; Max-Age=0; path=/"; // Clear cookie
+        alert('Logged out successfully!');
+        window.location.href = 'index.html';
+    });
+
+    // Ensure the navbar updates when the page loads
+    window.onload = updateNavbar;
+
+
+</script>
+
+</body>
+</html>
