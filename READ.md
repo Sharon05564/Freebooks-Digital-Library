@@ -104,12 +104,15 @@ Sequelize - ORM for MySQL
 Passport - Authentication middleware
 Google Books API - Fetch free e-books
 JWT - Secure authentication
+
 Contributing
 Feel free to open issues or submit pull requests for improvements. Contributions are welcomed!
 
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 Acknowledgments
 Special thanks to Google Books for providing access to their API.
 Thank you to Passport.js for making OAuth integration seamless.
+
+DEMO link
+https://youtu.be/zwyZ_G4WtmY?si=9pTjONYQ-JKZnkqI
+
