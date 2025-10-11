@@ -1,6 +1,7 @@
 FreeBooks Digital Library
 =======================================================================
 Overview
+========
 FreeBooks Digital Library is a web-based application that allows users to search, view, and save free books from a wide range of categories. It integrates with the Google Books API to fetch trending and free e-books and provides a seamless login experience with traditional email/password as well as Google OAuth authentication. Users can manage their profiles, save their favorite books, and interact with the application via an intuitive interface.
 
 Features
@@ -115,4 +116,5 @@ Thank you to Passport.js for making OAuth integration seamless.
 
 DEMO link
 https://youtu.be/zwyZ_G4WtmY?si=9pTjONYQ-JKZnkqI
+
 
