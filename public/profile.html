@@ -63,7 +63,7 @@
 </footer>
 <script src="js/zoomControl.js" defer></script>
 <!-- JavaScript -->
-<script src="js/script.js"></script>
+<script src="js/common.js"></script>
 <script>
     async function loadProfile() {
         const token = localStorage.getItem('token');
@@ -71,7 +71,7 @@
             headers: { 'Authorization': `Bearer ${token}` },
         });
         const data = await response.json();
-        document.getElementById('profileInfo').innerHTML = `<p><strong>Username:</strong> ${data.username}</p><p><strong>Email:</strong> ${data.email}</p>`;
+        document.getElementById('profileInfo').innerHTML = `<p><strong>Username:</strong> ${escapeHtml(data.username)}</p><p><strong>Email:</strong> ${escapeHtml(data.email)}</p>`;
     }
 
     document.getElementById('updateProfileForm').addEventListener('submit', async (e) => {
@@ -92,9 +92,6 @@
     });
 
     loadProfile(); // Load the profile when the page loads
-
-    // Navbar Update on Page Load
-    window.onload = updateNavbar;
 </script>
 </body>
 

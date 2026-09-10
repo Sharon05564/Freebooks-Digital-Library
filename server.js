@@ -9,6 +9,7 @@ const sendEmail = require('./public/js/email'); // Email utility
 const authRoutes = require('./routes/authRoutes'); // Authentication routes
 const bookRoutes = require('./routes/bookRoutes'); // Book search routes
 const savedRoutes = require('./routes/savedRoutes'); // Saved books routes
+const profileRoutes = require('./routes/profileRoutes'); // Profile routes
 
 // Load environment variables
 dotenv.config();
@@ -17,7 +18,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors()); // Enable CORS for all routes
+const allowedOrigin = process.env.APP_ORIGIN || `http://localhost:${process.env.PORT || 3000}`;
+app.use(cors({ origin: allowedOrigin, credentials: true })); // Restrict CORS to this app's own origin
 app.use(bodyParser.json()); // For parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
 app.use(express.static('public')); // Serve static files
@@ -47,6 +49,7 @@ sequelize.authenticate()
 app.use('/auth', authRoutes); // Authentication routes
 app.use('/books', bookRoutes); // Book search routes
 app.use('/api', savedRoutes); // Saved books routes
+app.use('/', profileRoutes); // Profile routes (GET/PUT /profile)
 
 // Endpoint to send messages
 app.post('/api/sendMessage', async (req, res) => {

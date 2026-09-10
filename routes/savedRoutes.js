@@ -3,15 +3,27 @@ const SavedBook = require('../models/SavedBook');
 const authMiddleware = require('../middleware/authMiddleware'); // Ensure this middleware is correctly used
 const router = express.Router();
 
+// Keep saved-book fields bounded - this data round-trips into rendered HTML
+// on the client, so reject anything that isn't a reasonably-sized string.
+const isValidField = (value, maxLength) =>
+    typeof value === 'string' && value.trim().length > 0 && value.length <= maxLength;
+
 // Route to save a book
 router.post('/saved', authMiddleware, async (req, res) => {
     const { bookId, title, authors, imageUrl, bookLink } = req.body;
     const userId = req.user.userId;
 
-    try {
-        // Log data for debugging
-        console.log('Received data to save:', { userId, bookId, title, authors, imageUrl, bookLink });
+    if (!isValidField(bookId, 100) || !isValidField(title, 300) || !isValidField(authors, 300)) {
+        return res.status(400).json({ error: 'bookId, title, and authors are required.' });
+    }
+    if (imageUrl !== undefined && imageUrl !== null && !isValidField(imageUrl, 500)) {
+        return res.status(400).json({ error: 'imageUrl is too long.' });
+    }
+    if (bookLink !== undefined && bookLink !== null && !isValidField(bookLink, 500)) {
+        return res.status(400).json({ error: 'bookLink is too long.' });
+    }
 
+    try {
         // Check if the book is already saved by the user
         const existingBook = await SavedBook.findOne({ where: { userId, bookId } });
         if (existingBook) {

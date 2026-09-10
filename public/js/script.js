@@ -79,18 +79,21 @@ function displayBooks(books) {
     const resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = ''; // Clear previous results
 
-    let output = books.map((book) => {
+    const output = books.map((book) => {
         const title = book.volumeInfo?.title || 'Title not available';
         const authors = book.volumeInfo?.authors?.join(', ') || 'Author(s) not available';
         const imageUrl = book.volumeInfo?.imageLinks?.thumbnail || 'https://via.placeholder.com/128x190?text=No+Cover';
         const bookLink = book.volumeInfo?.infoLink || '#';
 
+        // Title/authors/imageUrl come from a third-party API - escape before
+        // inserting into innerHTML so they can't inject markup or break out
+        // of the href/src attributes.
         return `
-            <a href="${bookLink}" target="_blank" class="book-link">
+            <a href="${escapeHtml(bookLink)}" target="_blank" class="book-link">
                 <div class="book-card">
-                    <img src="${imageUrl}" alt="${title} cover" class="book-cover">
-                    <h3>${title}</h3>
-                    <p>${authors}</p>
+                    <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(title)} cover" class="book-cover">
+                    <h3>${escapeHtml(title)}</h3>
+                    <p>${escapeHtml(authors)}</p>
                 </div>
             </a>
         `;
@@ -110,40 +113,3 @@ function togglePaginationButtons(bookCount) {
     // Show/Hide Next button based on the number of results returned
     nextBtn.style.display = bookCount === maxResults ? 'inline-block' : 'none';
 }
-
-// Function to update navbar on page load
-function updateNavbar() {
-    const user = JSON.parse(localStorage.getItem('user'));
-
-    if (user) {
-        document.getElementById('userNav').innerHTML = `<a href="/profile.html">${user.username}</a>`;
-        document.getElementById('savedItems').style.display = 'inline';
-        document.getElementById('logoutBtn').style.display = 'inline';
-        document.getElementById('loginButton').style.display = 'none';
-    } else {
-        document.getElementById('userNav').innerHTML = '';
-        document.getElementById('savedItems').style.display = 'none';
-        document.getElementById('logoutBtn').style.display = 'none';
-        document.getElementById('loginButton').style.display = 'inline';
-    }
-}
-
-// Logout function
-document.getElementById('logoutBtn').addEventListener('click', () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    document.cookie = "jwt=; Max-Age=0; path=/"; // Clear cookie
-    alert('Logged out successfully!');
-    window.location.href = 'index.html';
-});
-
-
-// Ensure the navbar updates when the page loads
-window.onload = updateNavbar;
-
-
-
-
-
-
-

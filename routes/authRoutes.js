@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { body, validationResult } = require('express-validator');
 const passport = require('../config/passport.js');
 const User = require('../models/user');
 
@@ -13,6 +14,12 @@ const validateInput = (email, password) => {
     return { valid: true };
 };
 
+const registerValidators = [
+    body('username').trim().isLength({ min: 3, max: 50 }).withMessage('Username must be 3-50 characters.'),
+    body('email').trim().isEmail().withMessage('A valid email is required.').normalizeEmail(),
+    body('password').isLength({ min: 6, max: 100 }).withMessage('Password must be at least 6 characters.'),
+];
+
 // Function to clear any existing sessions
 function clearExistingSession(res) {
     console.log('Clearing existing session cookies...');
@@ -22,15 +29,14 @@ function clearExistingSession(res) {
 }
 
 // User Registration
-router.post('/register', async (req, res) => {
+router.post('/register', registerValidators, async (req, res) => {
     try {
-        const { username, email, password } = req.body;
-
-        // Validate input
-        const { valid, message } = validateInput(email, password);
-        if (!valid) {
-            return res.status(400).json({ success: false, message });
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ success: false, message: errors.array()[0].msg });
         }
+
+        const { username, email, password } = req.body;
 
         // Check if user already exists
         const existingUser = await User.findOne({ where: { email } });
@@ -87,21 +93,30 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// Passport throws "Unknown authentication strategy" if these routes are hit
+// while Google Sign-In isn't configured (see config/passport.js) - guard
+// them so that returns a clear message instead of a generic 500.
+const requireGoogleAuth = (req, res, next) => {
+    if (!passport.googleEnabled) {
+        return res.status(503).json({ success: false, message: 'Google Sign-In is not configured on this server.' });
+    }
+    next();
+};
+
 // Google OAuth Sign-In Route
 router.get('/google',
+    requireGoogleAuth,
     passport.authenticate('google-signin', { scope: ['profile', 'email'] })
 );
 
 // Google OAuth Sign-In Callback Route
 router.get('/google/callback',
+    requireGoogleAuth,
     passport.authenticate('google-signin', { failureRedirect: '/login' }),
     async (req, res) => {
         try {
             // Clear any existing sessions before proceeding
             clearExistingSession(res);
-
-            // Log the user object obtained from Google authentication
-            console.log('User authenticated via Google:', req.user);
 
             // Generate JWT token after successful Google login
             const token = jwt.sign({
@@ -109,9 +124,6 @@ router.get('/google/callback',
                 username: req.user.username,
                 email: req.user.email
             }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-            // Log the generated token
-            console.log('Generated JWT Token:', token);
 
             // Redirect to success route with token as query parameter
             res.redirect(`/auth/success?token=${token}`);
@@ -124,11 +136,13 @@ router.get('/google/callback',
 
 // Google OAuth Sign-Up Route
 router.get('/google/signup',
+    requireGoogleAuth,
     passport.authenticate('google-signup', { scope: ['profile', 'email'] })
 );
 
 // Google OAuth Sign-Up Callback Route
 router.get('/google/signup/callback',
+    requireGoogleAuth,
     passport.authenticate('google-signup', { failureRedirect: '/register' }),
     async (req, res) => {
         try {
@@ -151,26 +165,38 @@ router.get('/google/signup/callback',
 // Add this in authRoutes.js
 router.get('/success', (req, res) => {
     const token = req.query.token;
-    if (token) {
-        // Send a script that stores the token in localStorage and redirects to the homepage
-        res.send(`
-            <script>
-                console.log('Token received:', '${token}');
-                localStorage.setItem('token', '${token}');
-                const payload = JSON.parse(atob('${token}'.split('.')[1]));
-                const user = {
-                    username: payload.username,
-                    id: payload.userId,
-                    email: payload.email,
-                };
-                console.log('User decoded from token:', user);
-                localStorage.setItem('user', JSON.stringify(user));
-                window.location.href = '/';
-            </script>
-        `);
-    } else {
-        res.status(400).send('Invalid request: No token found.');
+    if (!token) {
+        return res.status(400).send('Invalid request: No token found.');
     }
+
+    // Verify the token was actually issued by us before ever reflecting it back
+    // into the page - an unverified token here is a reflected-XSS vector since
+    // anyone can hit this route with an arbitrary ?token= value.
+    let payload;
+    try {
+        payload = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (error) {
+        return res.status(400).send('Invalid or expired token.');
+    }
+
+    const user = {
+        username: payload.username,
+        id: payload.userId,
+        email: payload.email,
+    };
+
+    // JSON.stringify escapes quotes; also escape "<" so a value like
+    // "</script>" in the payload can't break out of the inline script tag.
+    const safeToken = JSON.stringify(token).replace(/</g, '\\u003c');
+    const safeUser = JSON.stringify(user).replace(/</g, '\\u003c');
+
+    res.send(`
+        <script>
+            localStorage.setItem('token', ${safeToken});
+            localStorage.setItem('user', ${safeUser});
+            window.location.href = '/';
+        </script>
+    `);
 });
 
 module.exports = router;
