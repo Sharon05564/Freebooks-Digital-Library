@@ -7,8 +7,8 @@
     <title>Contact Us - FreeBooks Digital Library</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="js/common.js" defer></script>
     <script src="js/contact.js" defer></script> <!-- Include the new JavaScript file -->
-    <script src="js/script.js" defer></script> <!-- Include the main script for navbar functionality -->
 
 </head>
 
@@ -113,60 +113,6 @@
     </div>
 </footer>
 <script src="js/zoomControl.js" defer></script>
-<!-- JavaScript for navbar behavior -->
-<script>
-    // Update navbar based on user login status
-    function updateNavbar() {
-        const user = JSON.parse(localStorage.getItem('user'));
-
-        if (user) {
-            document.getElementById('userNav').innerHTML = `<a href="/profile.html">${user.username}</a>`;
-            document.getElementById('savedItems').style.display = 'inline';
-            document.getElementById('logoutBtn').style.display = 'inline';
-            document.getElementById('loginButton').style.display = 'none';
-        } else {
-            document.getElementById('userNav').innerHTML = '';
-            document.getElementById('savedItems').style.display = 'none';
-            document.getElementById('logoutBtn').style.display = 'none';
-            document.getElementById('loginButton').style.display = 'inline';
-        }
-    }
-
-    // Logout function
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        alert('Logged out successfully!');
-        window.location.href = 'index.html';
-    });
-
-    // Handle login modal
-    document.getElementById('loginButton').addEventListener('click', (event) => {
-        event.preventDefault();
-        document.getElementById('authModal').style.display = 'block';
-    });
-
-    document.getElementById('closeModal').addEventListener('click', () => {
-        document.getElementById('authModal').style.display = 'none';
-    });
-
-    window.onclick = (event) => {
-        const modal = document.getElementById('authModal');
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
-    };
-
-    document.getElementById('loginOption').addEventListener('click', () => {
-        window.location.href = 'login.html';
-    });
-
-    document.getElementById('registerOption').addEventListener('click', () => {
-        window.location.href = 'register.html';
-    });
-
-    window.onload = updateNavbar;
-</script>
 
 </body>
 </html>

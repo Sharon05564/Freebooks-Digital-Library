@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - FreeBooks Digital Library</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="login.css"> <!-- Link to the new CSS file -->
 </head>
 
 <body>
@@ -57,6 +56,7 @@
     </div>
 </footer>
 <script src="js/zoomControl.js" defer></script>
+<script src="js/common.js"></script>
 <script>
     // Handle login form submission
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -86,22 +86,6 @@
             alert('An error occurred. Please try again later.');
         }
     });
-
-    // Dynamically update navbar based on login status
-    function updateNavbar() {
-        const user = JSON.parse(localStorage.getItem('user')); // Retrieve user data
-
-        if (user) {
-            document.getElementById('userNav').innerHTML = `<a href="/profile.html">${user.username}</a>`;
-            document.getElementById('savedItems').style.display = 'inline'; // Show saved items link
-        } else {
-            document.getElementById('userNav').innerHTML = '<a href="/login.html">Login</a>';
-            document.getElementById('savedItems').style.display = 'none'; // Hide saved items link
-        }
-    }
-
-    // Call updateNavbar on page load
-    window.onload = updateNavbar;
 </script>
 </body>
 

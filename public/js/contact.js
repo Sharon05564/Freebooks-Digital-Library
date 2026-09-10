@@ -32,33 +32,3 @@ document.getElementById('contactForm').addEventListener('submit', function (even
         });
 });
 
-// Update navbar based on user login status
-function updateNavbar() {
-    const user = JSON.parse(localStorage.getItem('user'));
-
-    if (user) {
-        document.getElementById('userNav').innerHTML = `<a href="/profile.html">${user.username}</a>`;
-        document.getElementById('savedItems').style.display = 'inline';
-        document.getElementById('logoutBtn').style.display = 'inline';
-        document.getElementById('loginButton').style.display = 'none';
-    } else {
-        document.getElementById('userNav').innerHTML = '';
-        document.getElementById('savedItems').style.display = 'none';
-        document.getElementById('logoutBtn').style.display = 'none';
-        document.getElementById('loginButton').style.display = 'inline';
-    }
-}
-
-// Logout function
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        alert('Logged out successfully!');
-        window.location.href = 'index.html';
-    });
-
-    // Update navbar on load
-    updateNavbar();
-});
-

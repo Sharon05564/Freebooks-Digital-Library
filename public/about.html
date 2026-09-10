@@ -75,37 +75,7 @@
     </div>
 </footer>
 <script src="js/zoomControl.js" defer></script>
-<script src="js/script.js"></script>
-<!-- JavaScript for Navbar Behavior -->
-<script>
-    // Update navbar based on user login status
-    function updateNavbar() {
-        const user = JSON.parse(localStorage.getItem('user'));
-
-        if (user) {
-            document.getElementById('userNav').innerHTML = `<a href="/profile.html">${user.username}</a>`;
-            document.getElementById('savedItems').style.display = 'inline';
-            document.getElementById('logoutBtn').style.display = 'inline';
-            document.getElementById('loginButton').style.display = 'none';
-        } else {
-            document.getElementById('userNav').innerHTML = '';
-            document.getElementById('savedItems').style.display = 'none';
-            document.getElementById('logoutBtn').style.display = 'none';
-            document.getElementById('loginButton').style.display = 'inline';
-        }
-    }
-
-    // Logout functionality
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        alert('Logged out successfully!');
-        window.location.href = 'index.html';
-    });
-
-    // Initialize navbar on page load
-    window.onload = updateNavbar;
-</script>
+<script src="js/common.js"></script>
 
 </body>
 </html>
