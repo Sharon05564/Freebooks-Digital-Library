@@ -2,8 +2,9 @@ const jwt = require('jsonwebtoken');
 
 // Middleware to verify JWT tokens
 const authMiddleware = (req, res, next) => {
-    // Check for the token in both the Authorization header and cookies
-    const token = req.header('Authorization')?.replace('Bearer ', '') || req.cookies.jwt;
+    // Only the Authorization header is used anywhere in this app - there's no
+    // cookie-parser middleware registered, so reading req.cookies would throw.
+    const token = req.header('Authorization')?.replace('Bearer ', '');
 
     if (!token) {
         return res.status(401).json({ message: 'Access denied. No token provided.' });
