@@ -6,18 +6,21 @@ const sendEmail = async (formData) => {
     // Create a transporter object using SMTP transport
     const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
-        port: 546,
-        secure: false,
+        port: 465,
+        secure: true,
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS,
         },
     });
 
-    // Set up email data
+    // Set up email data. Gmail's SMTP relay requires the authenticated
+    // account as the envelope sender, so the visitor's address goes in
+    // replyTo instead - putting it in "from" gets silently rejected/spoofed.
     const mailOptions = {
-        from: formData.email, // Sender address
-        to: 'sharonowusu05564@gmail.com', // Receiver
+        from: process.env.EMAIL_USER,
+        replyTo: formData.email,
+        to: process.env.EMAIL_USER,
         subject: formData.subject || 'No Subject', // Subject line
         text: `From: ${formData.name} <${formData.email}>\n\n${formData.message}`, // Plain text body
     };

@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchSuggestions(query) {
         try {
-            const response = await fetch(`/suggest?query=${encodeURIComponent(query)}`);
+            const response = await fetch(`/books/suggest?query=${encodeURIComponent(query)}`);
             return await response.json();
         } catch (error) {
             console.error('Error fetching suggestions:', error);
