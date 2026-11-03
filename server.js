@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const passport = require('./config/passport.js'); // Import Passport
 const session = require('express-session'); // Required for persistent login sessions
 const sequelize = require('./config/database'); // Sequelize configuration
-const sendEmail = require('./public/js/email'); // Email utility
+const sendEmail = require('./services/email'); // Email utility
 const authRoutes = require('./routes/authRoutes'); // Authentication routes
 const bookRoutes = require('./routes/bookRoutes'); // Book search routes
 const savedRoutes = require('./routes/savedRoutes'); // Saved books routes
@@ -14,8 +14,20 @@ const profileRoutes = require('./routes/profileRoutes'); // Profile routes
 // Load environment variables
 dotenv.config();
 
+const isProduction = process.env.NODE_ENV === 'production';
+if (isProduction && !process.env.JWT_SECRET) {
+    console.error('JWT_SECRET must be set in production.');
+    process.exit(1);
+}
+
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Render terminates TLS at its proxy; trusting it keeps secure cookies and
+// OAuth callback URLs on https.
+app.set('trust proxy', 1);
+
+app.get('/healthz', (req, res) => res.status(200).send('ok'));
 
 // Middleware
 const allowedOrigin = process.env.APP_ORIGIN || `http://localhost:${process.env.PORT || 3000}`;
@@ -27,23 +39,25 @@ app.use(express.static('public')); // Serve static files
 // **Initialize Passport**
 require('./config/passport'); // Correctly require the Passport setup file
 app.use(session({
-    secret: process.env.JWT_SECRET, // Use the JWT_SECRET as the session secret
+    secret: process.env.SESSION_SECRET || process.env.JWT_SECRET,
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false,
+    cookie: { httpOnly: true, sameSite: 'lax', secure: isProduction }
 }));
 app.use(passport.initialize()); // Initialize Passport
 app.use(passport.session()); // Enable persistent login sessions
 
-// Connect to MySQL using Sequelize
+// Connect to Postgres using Sequelize. `alter` rewrites tables to match the
+// models, which is only safe in development.
 sequelize.authenticate()
     .then(() => {
-        console.log('MySQL connected successfully');
-        return sequelize.sync({ alter: true }); // Alter tables to match the model structure
+        console.log('Database connected successfully');
+        return sequelize.sync(isProduction ? {} : { alter: true });
     })
     .then(() => {
         console.log('Database synced successfully');
     })
-    .catch(err => console.error('Error connecting to MySQL:', err));
+    .catch(err => console.error('Error connecting to the database:', err));
 
 // Routes
 app.use('/auth', authRoutes); // Authentication routes

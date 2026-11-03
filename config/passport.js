@@ -24,13 +24,16 @@ passport.deserializeUser(async (id, done) => {
 // startup. Google Sign-In is an optional feature, so only register these
 // strategies when it's actually configured - routes/authRoutes.js checks
 // passport.googleEnabled before using them.
+const callbackBase = process.env.APP_ORIGIN || '';
+
 passport.googleEnabled = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
 
 if (passport.googleEnabled) {
     passport.use('google-signin', new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "/auth/google/callback"
+        callbackURL: `${callbackBase}/auth/google/callback`,
+        proxy: true
     }, async (token, tokenSecret, profile, done) => {
         try {
 
@@ -52,7 +55,8 @@ if (passport.googleEnabled) {
     passport.use('google-signup', new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "/auth/google/signup/callback"
+        callbackURL: `${callbackBase}/auth/google/signup/callback`,
+        proxy: true
     }, async (token, tokenSecret, profile, done) => {
         try {
             // Check if username already exists

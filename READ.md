@@ -18,7 +18,7 @@ Project Structure
 graphql
 
 |-- config/                     # Configuration files
-|   |-- database.js             # Database configuration (MySQL via Sequelize)
+|   |-- database.js             # Database configuration (Postgres via Sequelize)
 |   |-- passport.js             # Google OAuth configuration using Passport
 |-- models/                     # Sequelize models
 |   |-- SavedBook.js            # Model for saved books
@@ -42,7 +42,7 @@ graphql
 Getting Started
 Prerequisites
 Node.js
-MySQL
+PostgreSQL
 Google OAuth credentials (Client ID and Client Secret)
 Google Books API Key
 
@@ -60,26 +60,20 @@ Configure environment variables: Create a .env file in the root directory and pr
 makefile
 
 GOOGLE_BOOKS_API_KEY=your-google-books-api-key
-MYSQL_DB=freebooksdb
-MYSQL_USER=root
-MYSQL_PASSWORD=1234
-MYSQL_HOST=localhost
+POSTGRES_DB=freebooksdb
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=your-password
+POSTGRES_HOST=localhost
+APP_ORIGIN=http://localhost:3000
 PORT=3000
 JWT_SECRET=your-jwt-secret
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
-Set up MySQL Database:
+Set up the database:
 
-Ensure your MySQL server is running.
-Create a database:
-sql
+Create an empty Postgres database named freebooksdb. The tables are created
+automatically the first time the server starts.
 
-CREATE DATABASE freebooksdb;
-Run Sequelize migrations:
-
-bash
-
-npx sequelize-cli db:migrate
 Running the Application
 bash
 
@@ -101,7 +95,7 @@ The contact form on the website allows users to send messages to the admin email
 Built With
 Node.js - JavaScript runtime environment
 Express - Web framework for Node.js
-Sequelize - ORM for MySQL
+Sequelize - ORM for PostgreSQL
 Passport - Authentication middleware
 Google Books API - Fetch free e-books
 JWT - Secure authentication
@@ -117,4 +111,8 @@ Thank you to Passport.js for making OAuth integration seamless.
 DEMO link
 https://youtu.be/zwyZ_G4WtmY?si=9pTjONYQ-JKZnkqI
 
-
+Deploying to Render
+Create a free Postgres database on Neon and copy its connection string.
+In Render, choose New > Blueprint and select this repository. render.yaml defines the web service.
+Set the variables marked sync: false (DATABASE_URL, APP_ORIGIN, GOOGLE_BOOKS_API_KEY, and the Google and Resend keys).
+APP_ORIGIN must be the public https URL of the service. Add APP_ORIGIN + /auth/google/callback and /auth/google/signup/callback to the OAuth client's authorized redirect URIs in Google Cloud Console.

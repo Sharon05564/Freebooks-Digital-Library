@@ -1,25 +1,22 @@
 const { Sequelize } = require('sequelize');
 const dotenv = require('dotenv');
 
-
 dotenv.config();
 
-const sequelize = new Sequelize(process.env.MYSQL_DB, process.env.MYSQL_USER, process.env.MYSQL_PASSWORD, {
-    host: process.env.MYSQL_HOST,
-    port: process.env.MYSQL_PORT || 3306,
-    dialect: 'mysql',
-    logging: false,
-});
+const isProduction = process.env.NODE_ENV === 'production';
+const baseOptions = { dialect: 'postgres', logging: false };
 
-sequelize.authenticate()
-    .then(() => {
-        console.log('MySQL connected successfully');
+// Hosted Postgres (Neon, Render) provides one DATABASE_URL and requires TLS.
+// Local development falls back to the individual POSTGRES_* variables.
+const sequelize = process.env.DATABASE_URL
+    ? new Sequelize(process.env.DATABASE_URL, {
+        ...baseOptions,
+        dialectOptions: isProduction ? { ssl: { require: true, rejectUnauthorized: true } } : {},
     })
-    .then(() => {
-        console.log('Database synchronized successfully');
-    })
-    .catch(err => {
-        console.log('Error connecting to MySQL:', err);
+    : new Sequelize(process.env.POSTGRES_DB, process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD, {
+        ...baseOptions,
+        host: process.env.POSTGRES_HOST || 'localhost',
+        port: process.env.POSTGRES_PORT || 5432,
     });
 
 module.exports = sequelize;

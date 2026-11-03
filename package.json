@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "main": "server.js",
     "scripts": {
+        "start": "node server.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "private": true,
@@ -21,10 +22,13 @@
         "express-session": "^1.18.1",
         "express-validator": "^7.2.0",
         "jsonwebtoken": "^9.0.2",
-        "mysql2": "^3.11.3",
-        "nodemailer": "^6.9.15",
         "passport": "^0.7.0",
         "passport-google-oauth20": "^2.0.0",
+        "pg": "^8.13.0",
+        "pg-hstore": "^2.3.4",
         "sequelize": "^6.37.4"
+    },
+    "engines": {
+        "node": ">=20"
     }
 }
