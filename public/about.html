@@ -1,81 +1,59 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - FreeBooks Digital Library</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-
-<body>
-
-<!-- Header Section -->
-<header>
-    <div class="header-container">
-        <div class="logo">
-            <a href="index.html">
-                <h1>FreeBooks</h1>
-            </a>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#faf9f6" />
+    <meta
+      name="description"
+      content="Discover your next great read. Explore free ebooks, revisit the classics, and build a bookshelf of your own."
+    />
+    <title>An open world of books — FreeBooks</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/js/common.js" defer></script>
+    <script src="/js/app.js" defer></script>
+  </head>
+  <body data-page="about">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="site-header"></div>
+    <main id="main" class="about-main">
+      <div class="page-heading">
+        <div class="eyebrow">A LIBRARY WITHOUT THE DOOR</div>
+        <h1>For the love<br />of getting lost.</h1>
+        <p>In a story. In an idea. In a world you never knew existed.</p>
+      </div>
+      <div class="about-layout">
+        <div class="about-illustration">
+          <img
+            src="/assets/covers/odyssey.svg"
+            alt="Original illustrated cover of The Odyssey"
+          /><img
+            src="/assets/covers/little-women.svg"
+            alt="Original illustrated cover of Little Women"
+          />
         </div>
-
-        <nav class="navbar">
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li id="savedItems" style="display: none;"><a href="saved.html">Saved Items</a></li>
-                <li id="userNav"></li> <!-- Placeholder for user name -->
-                <li><a href="login.html" id="loginButton" style="display: none;">Login</a></li>
-                <li><a href="#" id="logoutBtn" style="display: none;">Logout</a></li>
-            </ul>
-        </nav>
-    </div>
-</header>
-
-<!-- Main Content -->
-<main>
-    <h1>About FreeBooks Digital Library</h1>
-    <section>
-        <h2>Our Mission</h2>
-        <p>At <strong>FreeBooks Digital Library</strong>, we believe that knowledge should be accessible to everyone, regardless of their background or financial situation. Our mission is to provide readers with a vast collection of literary works, from classic literature to contemporary novels, academic texts, and more.</p>
-    </section>
-
-    <section>
-        <h2>Our Platform</h2>
-        <p>We understand the joy of reading and the importance of learning. That’s why we’ve curated a user-friendly platform that allows you to search for, discover, and enjoy books without the need for registration or fees. Simply browse our extensive catalog, find your next read, and dive into the world of literature.</p>
-    </section>
-
-    <section>
-        <h2>For Everyone</h2>
-        <p>Whether you are a student, a professional, or simply a book lover, we are dedicated to helping you expand your knowledge and enjoy the art of reading. Join us in our mission to promote literacy and learning for all!</p>
-    </section>
-
-    <section>
-        <h2>Happy Reading!</h2>
-        <p>Explore our collection and find your next great read!</p>
-    </section>
-</main>
-
-<!-- Footer Section -->
-<footer>
-    <div class="footer-content">
-        <div class="footer-links">
-            <a href="#">Terms of Use</a>
-            <a href="#">Copyright & Trademark</a>
-            <a href="#">Privacy</a>
-            <a href="#">Your Privacy Choices</a>
-            <a href="#">Accessibility</a>
-            <a href="#">Cookie Policy</a>
-            <a href="#">Sitemap</a>
+        <div class="prose">
+          <h2>Good books.<br />Open to everyone.</h2>
+          <p>
+            FreeBooks is a place to follow your curiosity. We bring together
+            free ebooks available through Google Books, so you can spend less
+            time searching and more time discovering.
+          </p>
+          <p>
+            Revisit a classic. Explore something unfamiliar. Build a personal
+            bookshelf of the stories you want to return to.
+          </p>
+          <p>
+            Reading takes you places. We’re here to help you find the next one.
+          </p>
+          <a class="button button-dark" href="/search.html?q=classic+literature"
+            >Find your next read <span data-icon="arrow"></span
+          ></a>
         </div>
-        <div class="footer-copyright">
-            <p>©2024 FreeBooks, Inc. 403 Main Street, Grambling, LA 71245</p>
-        </div>
-    </div>
-</footer>
-<script src="js/zoomControl.js" defer></script>
-<script src="js/common.js"></script>
-
-</body>
+      </div>
+    </main>
+    <div id="site-footer"></div>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </body>
 </html>

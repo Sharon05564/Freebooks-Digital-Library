@@ -1,92 +1,85 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - FreeBooks Digital Library</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-
-<body>
-<!-- Header Section -->
-<header>
-    <div class="header-container">
-        <div class="logo">
-            <a href="index.html">
-                <h1>FreeBooks</h1>
-            </a>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#faf9f6" />
+    <meta
+      name="description"
+      content="Discover your next great read. Explore free ebooks, revisit the classics, and build a bookshelf of your own."
+    />
+    <title>Welcome back — FreeBooks</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/js/common.js" defer></script>
+    <script src="/js/app.js" defer></script>
+  </head>
+  <body data-page="login">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="site-header"></div>
+    <main id="main" class="auth-main">
+      <div class="auth-art" aria-hidden="true">
+        <div class="auth-cover cover-one">
+          <img src="/assets/covers/pride.svg" alt="" />
         </div>
-        <nav class="navbar">
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li id="savedItems" style="display: none;"><a href="/saved.html">Saved Items</a></li>
-                <li id="userNav"></li> <!-- Placeholder for user name -->
-            </ul>
-        </nav>
-    </div>
-</header>
-
-<main>
-    <div class="login-content">
-        <h1>Login</h1>
-        <form id="loginForm" class="form-container">
-            <input type="email" placeholder="Email" name="email" required />
-            <input type="password" placeholder="Password" name="password" required />
-            <button type="submit">Login</button>
+        <div class="auth-cover cover-two">
+          <img src="/assets/covers/alice.svg" alt="" />
+        </div>
+        <div class="auth-art-caption">
+          <span class="eyebrow">YOUR NEXT CHAPTER STARTS HERE</span>
+          <h2>A shelf of stories.<br />A world of possibility.</h2>
+        </div>
+      </div>
+      <div class="auth-panel">
+        <div class="eyebrow">YOUR BOOKS MISSED YOU</div>
+        <h1>Welcome back.</h1>
+        <p>Pick up where your curiosity left off.</p>
+        <form id="auth-form" method="post" action="/auth/login" data-mode="login" class="stack-form">
+          <label for="email"
+            >Email address<input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              placeholder="you@example.com"
+              required /></label
+          ><label for="password"
+            >Password
+            <div class="password-field">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                minlength="6"
+                maxlength="100"
+                placeholder="Enter your password"
+                required
+              /><button
+                type="button"
+                id="toggle-password"
+                aria-label="Show password"
+              >
+                <span data-icon="eye"></span>
+              </button></div
+          ></label>
+          <p
+            class="form-message"
+            id="form-message"
+            role="status"
+            aria-live="polite"
+          ></p>
+          <button class="button button-dark" type="submit">
+            Log in <span data-icon="arrow"></span>
+          </button>
         </form>
-        <p>New to FreeBooks? <a href="register.html">Create an account</a></p>
-    </div>
-</main>
-
-<footer>
-    <div class="footer-content">
-        <div class="footer-links">
-            <a href="#">Terms of Use</a>
-            <a href="#">Copyright & Trademark</a>
-            <a href="#">Privacy</a>
-            <a href="#">Your Privacy Choices</a>
-            <a href="#">Accessibility</a>
-            <a href="#">Cookie Policy</a>
-            <a href="#">Sitemap</a>
-        </div>
-        <div class="footer-content">
-            <p>©2024 FreeBooks, Inc. 403 Main Street, Grambling, LA 71245</p>
-        </div>
-    </div>
-</footer>
-<script src="js/zoomControl.js" defer></script>
-<script src="js/common.js"></script>
-<script>
-    // Handle login form submission
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-
-        try {
-            const response = await fetch('/auth/login', {
-                method: 'POST',
-                body: JSON.stringify(Object.fromEntries(formData)),
-                headers: { 'Content-Type': 'application/json' },
-            });
-
-            const data = await response.json();
-            if (response.ok) {
-                // Store token and user info
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('user', JSON.stringify(data.user));
-
-                alert('Login successful!');
-                window.location.href = '/'; // Redirect to homepage
-            } else {
-                alert(data.message || 'Login failed. Please try again.');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred. Please try again later.');
-        }
-    });
-</script>
-</body>
-
+        <p class="auth-switch">
+          New around here? <a href="/register.html">Create an account</a>
+        </p>
+        <a class="quiet-link" href="/">← Keep exploring</a>
+      </div>
+    </main>
+    <div id="site-footer"></div>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </body>
 </html>

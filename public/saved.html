@@ -1,198 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saved Books - FreeBooks</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS -->
-</head>
-
-<body class="saved">
-<!-- Header Section -->
-<header>
-    <div class="header-container">
-        <div class="logo">
-            <a href="index.html">
-                <h1>FreeBooks</h1>
-            </a>
-        </div>
-        <nav class="navbar">
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li id="savedItems"><a href="saved.html">Saved Items</a></li>
-                <li id="userNav"></li> <!-- Placeholder for user name -->
-                <li><a href="#" id="logoutBtn" style="display: none;">Logout</a></li>
-            </ul>
-        </nav>
-    </div>
-</header>
-
-<main class="saved-container">
-    <h1>Saved Books</h1>
-    <div id="savedBooks" class="book-container"></div> <!-- Saved books will be displayed here -->
-</main>
-
-<footer>
-    <div class="footer-content">
-        <div class="footer-links">
-            <a href="#">Terms of Use</a>
-            <a href="#">Copyright & Trademark</a>
-            <a href="#">Privacy</a>
-            <a href="#">Your Privacy Choices</a>
-            <a href="#">Accessibility</a>
-            <a href="#">Cookie Policy</a>
-            <a href="#">Sitemap</a>
-        </div>
-        <div class="footer-content">
-            <p>©2024 FreeBooks, Inc. 403 Main Street, Grambling, LA 71245</p>
-        </div>
-    </div>
-</footer>
-
-<!-- Popup Modal -->
-<div id="popupModal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <h3 id="bookTitle"></h3>
-        <div id="popupActions">
-            <!-- Action buttons will be injected here -->
-        </div>
-        <button id="closePopup">Close</button>
-    </div>
-</div>
-<script src="js/zoomControl.js" defer></script>
-<script src="js/common.js"></script>
-<script>
-    // Fetch saved books on page load
-    document.addEventListener('DOMContentLoaded', async () => {
-        await fetchSavedBooks();
-
-        // Add event listener to close the popup
-        document.getElementById('closePopup').addEventListener('click', () => {
-            document.getElementById('popupModal').style.display = 'none';
-        });
-    });
-
-    // Function to fetch saved books
-    async function fetchSavedBooks() {
-        try {
-            const response = await fetch(`/api/saved`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-
-            if (!response.ok) {
-                if (response.status === 401) {
-                    // Token is expired or invalid; redirect to login
-                    alert('Session expired. Please log in again.');
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('user');
-                    window.location.href = '/login.html';
-                    return;
-                }
-                throw new Error('Error fetching saved books.');
-            }
-
-            const savedBooks = await response.json();
-            displaySavedBooks(savedBooks);
-        } catch (error) {
-            console.error('Error fetching saved books:', error);
-            alert('Something went wrong while fetching saved books. Please try again.');
-        }
-    }
-
-    // Function to display saved books
-    function displaySavedBooks(books) {
-        const savedBooksContainer = document.getElementById('savedBooks');
-        savedBooksContainer.innerHTML = ''; // Clear previous results
-
-        if (!books.length) {
-            savedBooksContainer.innerHTML = '<p>No saved books found.</p>';
-            return;
-        }
-
-        // Saved book fields are user-supplied (round-tripped through our own
-        // API), so escape them before inserting into innerHTML, and avoid
-        // building onclick="..." strings out of them entirely - use
-        // data attributes + a delegated click listener instead.
-        const output = books.map((book) => {
-            const imageUrl = book.imageUrl || 'https://via.placeholder.com/128x190?text=No+Cover';
-            return `
-            <div class="book-card" data-book-id="${escapeHtml(book.bookId)}" data-title="${escapeHtml(book.title)}" data-book-link="${escapeHtml(book.bookLink || '#')}">
-                <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(book.title)} cover" class="book-cover" onerror="this.src='https://via.placeholder.com/128x190?text=No+Cover'">
-                <h3>${escapeHtml(book.title)}</h3>
-                <p>Author(s): ${escapeHtml(book.authors)}</p>
-            </div>
-            `;
-        }).join('');
-
-        savedBooksContainer.innerHTML = output;
-
-        savedBooksContainer.querySelectorAll('.book-card').forEach((card) => {
-            card.addEventListener('click', () => {
-                const { bookId, title, bookLink } = card.dataset;
-                showPopup(title, bookLink, bookLink, bookId);
-            });
-        });
-    }
-
-    // Function to show the popup with options to view, download, or remove
-    function showPopup(title, bookLink, downloadLink, bookId) {
-        const popupModal = document.getElementById('popupModal');
-        const popupActions = document.getElementById('popupActions');
-
-        // Set the book title
-        document.getElementById('bookTitle').textContent = title;
-
-        // Create the action buttons
-        const safeLink = escapeHtml(bookLink);
-        const viewButton = `<a href="${safeLink}" target="_blank" class="action-link">View Book</a>`;
-        const downloadButton = `<a href="${escapeHtml(downloadLink)}" target="_blank" download class="action-link">Download</a>`;
-
-        popupActions.innerHTML = `${viewButton} ${downloadButton}`;
-
-        const removeButton = document.createElement('button');
-        removeButton.className = 'action-button';
-        removeButton.textContent = 'Remove';
-        removeButton.addEventListener('click', () => removeSavedBook(bookId));
-        popupActions.appendChild(removeButton);
-
-        // Show the popup
-        popupModal.style.display = 'block';
-    }
-
-    // Function to remove a saved book
-    async function removeSavedBook(bookId) {
-        try {
-            const response = await fetch(`/api/saved/${bookId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-
-            if (!response.ok) {
-                if (response.status === 401) {
-                    alert('Session expired. Please log in again.');
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('user');
-                    window.location.href = '/login.html';
-                    return;
-                }
-                throw new Error('Error removing saved book.');
-            }
-
-            alert('Book removed from saved items successfully!');
-            document.getElementById('popupModal').style.display = 'none';
-            await fetchSavedBooks(); // Refresh the list to reflect the removal
-        } catch (error) {
-            console.error('Error removing saved book:', error);
-            alert('Something went wrong while removing the book. Please try again.');
-        }
-    }
-</script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#faf9f6" />
+    <meta
+      name="description"
+      content="Discover your next great read. Explore free ebooks, revisit the classics, and build a bookshelf of your own."
+    />
+    <title>Your bookshelf — FreeBooks</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/js/common.js" defer></script>
+    <script src="/js/app.js" defer></script>
+  </head>
+  <body data-page="saved">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="site-header"></div>
+    <main id="main" class="page-main">
+      <div class="page-heading">
+        <div class="eyebrow">A LITTLE COLLECTION OF YOU</div>
+        <h1>Your bookshelf.</h1>
+        <p>The stories you want to come back to. All in one place.</p>
+      </div>
+      <div class="results-toolbar">
+        <span id="saved-count">Your saved books</span
+        ><a class="text-link" href="/search.html?q=classic+literature"
+          >Find something new <span data-icon="arrow"></span
+        ></a>
+      </div>
+      <div id="savedBooks" class="book-grid" aria-live="polite"></div>
+    </main>
+    <div id="site-footer"></div>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </body>
 </html>

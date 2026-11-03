@@ -1,94 +1,94 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - FreeBooks Digital Library</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-
-<body>
-<!-- Header Section -->
-<header>
-    <div class="header-container">
-        <div class="logo">
-            <a href="index.html">
-                <h1>FreeBooks</h1>
-            </a>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#faf9f6" />
+    <meta
+      name="description"
+      content="Discover your next great read. Explore free ebooks, revisit the classics, and build a bookshelf of your own."
+    />
+    <title>Create your bookshelf — FreeBooks</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/js/common.js" defer></script>
+    <script src="/js/app.js" defer></script>
+  </head>
+  <body data-page="register">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="site-header"></div>
+    <main id="main" class="auth-main">
+      <div class="auth-art" aria-hidden="true">
+        <div class="auth-cover cover-one">
+          <img src="/assets/covers/pride.svg" alt="" />
         </div>
-        <nav class="navbar">
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </nav>
-    </div>
-</header>
-
-<main>
-    <div class="registration-content">
-        <h1>Register</h1>
-        <form id="registrationForm" class="form-container">
-            <input type="text" placeholder="Username" name="username" required>
-            <input type="email" placeholder="Email" name="email" required>
-            <input type="password" placeholder="Password" name="password" required>
-            <button type="submit">Register</button>
+        <div class="auth-cover cover-two">
+          <img src="/assets/covers/alice.svg" alt="" />
+        </div>
+        <div class="auth-art-caption">
+          <span class="eyebrow">YOUR NEXT CHAPTER STARTS HERE</span>
+          <h2>A shelf of stories.<br />A world of possibility.</h2>
+        </div>
+      </div>
+      <div class="auth-panel">
+        <div class="eyebrow">MAKE YOURSELF AT HOME</div>
+        <h1>A bookshelf<br />of your own.</h1>
+        <p>Save your discoveries. Find your next favorite.</p>
+        <form id="auth-form" method="post" action="/auth/register" data-mode="register" class="stack-form">
+          <label for="username"
+            >Your name<input
+              id="username"
+              name="username"
+              autocomplete="username"
+              minlength="3"
+              maxlength="50"
+              placeholder="What should we call you?"
+              required /></label
+          ><label for="email"
+            >Email address<input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              placeholder="you@example.com"
+              required /></label
+          ><label for="password"
+            >Password
+            <div class="password-field">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="new-password"
+                minlength="6"
+                maxlength="100"
+                placeholder="At least 6 characters"
+                required
+              /><button
+                type="button"
+                id="toggle-password"
+                aria-label="Show password"
+              >
+                <span data-icon="eye"></span>
+              </button></div
+          ></label>
+          <p
+            class="form-message"
+            id="form-message"
+            role="status"
+            aria-live="polite"
+          ></p>
+          <button class="button button-dark" type="submit">
+            Create an account <span data-icon="arrow"></span>
+          </button>
         </form>
-    </div>
-</main>
-
-<footer>
-    <div class="footer-content">
-        <div class="footer-links">
-            <a href="#">Terms of Use</a>
-            <a href="#">Copyright & Trademark</a>
-            <a href="#">Privacy</a>
-            <a href="#">Your Privacy Choices</a>
-            <a href="#">Accessibility</a>
-            <a href="#">Cookie Policy</a>
-            <a href="#">Sitemap</a>
-        </div>
-        <div class="footer-copyright">
-            <p>©2024 FreeBooks, Inc. 403 Main Street, Grambling, LA 71245</p>
-        </div>
-    </div>
-</footer>
-<script src="js/zoomControl.js" defer></script>
-
-<!-- JavaScript for form submission -->
-<script>
-    document.getElementById('registrationForm').addEventListener('submit', async (event) => {
-        event.preventDefault(); // Prevent default form submission
-
-        const formData = new FormData(event.target);
-        const data = {
-            username: formData.get('username'),
-            email: formData.get('email'),
-            password: formData.get('password')
-        };
-
-        try {
-            const response = await fetch('/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-
-            const result = await response.json();
-            if (response.ok) {
-                alert('Registration successful! Please log in.');
-                window.location.href = 'login.html'; // Redirect to login page
-            } else {
-                alert(result.message || 'Registration failed. Please try again.');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred. Please try again later.');
-        }
-    });
-</script>
-</body>
-
+        <p class="auth-switch">
+          Already have a shelf? <a href="/login.html">Log in</a>
+        </p>
+        <a class="quiet-link" href="/">← Keep exploring</a>
+      </div>
+    </main>
+    <div id="site-footer"></div>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </body>
 </html>

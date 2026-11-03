@@ -15,15 +15,15 @@ router.get('/search', async (req, res) => {
     let query = q.trim();
     const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
 
-    if (category) query += `+subject:${category}`; // Add category filter if provided
+    if (category) query += ` subject:${category}`; // Add category filter if provided
 
     try {
         const response = await axios.get('https://www.googleapis.com/books/v1/volumes', {
             params: {
                 q: query,
                 filter: 'free-ebooks',
-                startIndex: parseInt(0), //
-                maxResults: parseInt(10), //
+                startIndex: Math.max(0, parseInt(startIndex, 10) || 0),
+                maxResults: Math.min(40, Math.max(1, parseInt(maxResults, 10) || 10)),
                 key: apiKey,
             },
         });

@@ -1,241 +1,70 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Results - FreeBooks</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS -->
-</head>
-
-<body class="results">
-
-<!-- Header Section -->
-<header>
-    <div class="header-container">
-        <div class="logo">
-            <a href="index.html">
-                <h1>FreeBooks</h1>
-            </a>
-        </div>
-
-        <nav class="navbar">
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li id="savedItems" style="display: none;"><a href="/saved.html">Saved Items</a></li>
-                <li id="userNav"></li> <!-- Placeholder for user name -->
-                <li><a href="#" id="logoutBtn" style="display: none;">Logout</a></li>
-            </ul>
-        </nav>
-    </div>
-</header>
-<script src="js/zoomControl.js" defer></script>
-<script src="js/common.js"></script>
-
-<!-- Search Container -->
-<main class="search-container">
-    <h1>Search Results</h1>
-    <div id="results" class="book-container"></div>
-
-    <!-- Pagination Buttons -->
-    <div class="pagination">
-        <button id="prevBtn">Previous</button>
-        <button id="nextBtn">Next</button>
-    </div>
-</main>
-
-<!-- Footer Section -->
-<footer>
-    <div class="footer-content">
-        <div class="footer-links">
-            <a href="#">Terms of Use</a>
-            <a href="#">Copyright & Trademark</a>
-            <a href="#">Privacy</a>
-            <a href="#">Your Privacy Choices</a>
-            <a href="#">Accessibility</a>
-            <a href="#">Cookie Policy</a>
-            <a href="#">Sitemap</a>
-        </div>
-        <div class="footer-copyright">
-            <p>©2024 FreeBooks, Inc. 403 Main Street, Grambling, LA 71245</p>
-        </div>
-    </div>
-</footer>
-
-<!-- Success Modal -->
-<div id="successModal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <p>Book saved successfully!</p>
-        <button id="closeModal">Close</button>
-    </div>
-</div>
-
-<!-- JavaScript to fetch and display books -->
-<script>
-    // Pagination settings
-    let startIndex = 0;
-    const maxResults = 10;
-
-    // Get query parameters from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const query = urlParams.get('q');
-    const category = urlParams.get('category');
-
-    // Fetch books on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        fetchBooks(query, category);
-    });
-
-    // Next button click event
-    document.getElementById('nextBtn').addEventListener('click', async () => {
-        startIndex += maxResults;
-        await fetchBooks(query, category);
-    });
-
-    // Previous button click event
-    document.getElementById('prevBtn').addEventListener('click', async () => {
-        if (startIndex >= maxResults) {
-            startIndex -= maxResults;
-            await fetchBooks(query, category);
-        }
-    });
-
-    // Function to fetch books
-    async function fetchBooks(query, category) {
-        try {
-            const response = await fetch(
-                `/books/search?q=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}&startIndex=${startIndex}&maxResults=${maxResults}`
-            );
-
-            if (!response.ok) {
-                throw new Error('Error fetching books.');
-            }
-
-            const books = await response.json();
-
-            if (!books || books.length === 0) {
-                document.getElementById('results').innerHTML = '<p>No books found. Try a different search.</p>';
-                togglePaginationButtons(0);
-                return;
-            }
-
-            displayBooks(books);
-            togglePaginationButtons(books.length);
-        } catch (error) {
-            console.error('Error fetching books:', error);
-            alert('Something went wrong while fetching the books. Please try again.');
-        }
-    }
-
-    function displayBooks(books) {
-        const resultsContainer = document.getElementById('results');
-        resultsContainer.innerHTML = ''; // Clear previous results
-
-        // Book data comes from a third-party API - escape everything before
-        // inserting into innerHTML, and keep raw values out of onclick="..."
-        // strings (use data attributes + addEventListener instead).
-        const output = books.map((book) => {
-            const title = book.volumeInfo?.title || 'Title not available';
-            const authors = book.volumeInfo?.authors?.join(', ') || 'Author(s) not available';
-            const description = book.volumeInfo?.description || 'No description available';
-            const imageUrl = book.volumeInfo?.imageLinks?.thumbnail || 'https://via.placeholder.com/128x190?text=No+Cover';
-            const pdfLink = book.accessInfo?.pdf?.downloadLink;
-            const infoLink = book.volumeInfo?.infoLink;
-            const bookLink = pdfLink || infoLink || '#';
-
-            return `
-            <div class="book-card" data-id="${escapeHtml(book.id)}" data-title="${escapeHtml(title)}" data-authors="${escapeHtml(authors)}" data-description="${escapeHtml(description)}" data-link="${escapeHtml(bookLink)}" data-image="${escapeHtml(imageUrl)}">
-                <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(title)} cover" class="book-cover" onerror="this.src='https://via.placeholder.com/128x190?text=No+Cover'">
-                <h3>${escapeHtml(title)}</h3>
-                <p>Author(s): ${escapeHtml(authors)}</p>
-                <div class="popup" style="display: none;">
-                    <div class="popup-actions">
-                        <a href="${escapeHtml(bookLink)}" target="_blank" class="action-link">View Book</a>
-                        <button class="action-button save-item-btn">Save Item</button>
-                        ${pdfLink ? `<a href="${escapeHtml(pdfLink)}" target="_blank" class="action-link">Download</a>` : ''}
-                    </div>
-                </div>
-            </div>
-        `;
-        }).join('');
-
-        resultsContainer.innerHTML = output;
-
-        // Add click event to each book card to toggle popup
-        const bookCards = document.querySelectorAll('.book-card');
-        bookCards.forEach(card => {
-            card.addEventListener('click', (e) => {
-                const popup = card.querySelector('.popup');
-                // Toggle popup visibility
-                popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
-            });
-
-            card.querySelector('.save-item-btn').addEventListener('click', (e) => {
-                const { id, title, authors, image, link } = card.dataset;
-                saveItem(id, title, authors, image, link, e);
-            });
-        });
-    }
-
-    // Handle click outside popup to close it
-    document.addEventListener('click', (event) => {
-        const popups = document.querySelectorAll('.popup');
-        popups.forEach(popup => {
-            if (!popup.contains(event.target) && !popup.parentElement.contains(event.target)) {
-                popup.style.display = 'none';
-            }
-        });
-    });
-
-    // Function to toggle pagination buttons
-    function togglePaginationButtons(bookCount) {
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-
-        prevBtn.style.display = startIndex > 0 ? 'inline-block' : 'none';
-        nextBtn.style.display = bookCount === maxResults ? 'inline-block' : 'none';
-    }
-
-    async function saveItem(bookId, title, authors, imageUrl, bookLink, event) {
-        event.stopPropagation();
-
-        const user = JSON.parse(localStorage.getItem('user'));
-
-        if (!user) {
-            alert('You must be logged in to save items.');
-            return;
-        }
-
-        try {
-            const response = await fetch('/api/saved', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify({ bookId, title, authors, imageUrl, bookLink })
-            });
-
-            if (!response.ok) {
-                if (response.status === 401) {
-                    alert('Session expired. Please log in again.');
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('user');
-                    window.location.href = '/login.html';
-                    return;
-                }
-                throw new Error('Error saving book.');
-            }
-
-            alert('Book saved successfully!');
-        } catch (error) {
-            console.error('Error saving book:', error);
-            alert('Book already Saved.');
-        }
-    }
-
-</script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#faf9f6" />
+    <meta
+      name="description"
+      content="Discover your next great read. Explore free ebooks, revisit the classics, and build a bookshelf of your own."
+    />
+    <title>Explore the library — FreeBooks</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/js/common.js" defer></script>
+    <script src="/js/app.js" defer></script>
+  </head>
+  <body data-page="search">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="site-header"></div>
+    <main id="main" class="page-main">
+      <div class="page-heading">
+        <div class="eyebrow">FOLLOW YOUR CURIOSITY</div>
+        <h1 id="search-title">Explore the library.</h1>
+        <p id="search-description">
+          Every search is the start of a new chapter.
+        </p>
+      </div>
+      <div class="results-search">
+        <form class="search-form" action="/search.html" role="search">
+          <label class="sr-only" for="searchBar"
+            >Search by title or author</label
+          ><span class="search-icon" data-icon="search"></span
+          ><input
+            id="searchBar"
+            name="q"
+            type="search"
+            placeholder="Search by title or author"
+            required
+            autocomplete="off"
+          /><button type="submit" class="button button-dark">
+            Find a book <span data-icon="arrow"></span>
+          </button>
+        </form>
+      </div>
+      <div class="results-toolbar">
+        <span id="result-summary" aria-live="polite"
+          >Finding your next read…</span
+        ><label class="select-label"
+          >Category
+          <select id="categorySelect">
+            <option value="">All books</option>
+            <option value="fiction">Fiction</option>
+            <option value="fantasy">Fantasy</option>
+            <option value="science">Science</option>
+            <option value="history">History</option>
+            <option value="poetry">Poetry</option>
+          </select></label
+        >
+      </div>
+      <div id="results" class="book-grid" aria-live="polite"></div>
+      <nav class="pagination" aria-label="Search pages">
+        <button id="prevBtn" class="button button-outline">← Previous</button
+        ><span id="page-number">Page 1</span
+        ><button id="nextBtn" class="button button-outline">Next →</button>
+      </nav>
+    </main>
+    <div id="site-footer"></div>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </body>
 </html>
