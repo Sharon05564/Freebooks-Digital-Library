@@ -1,5 +1,5 @@
 const express = require('express');
-const SavedBook = require('../models/SavedBook');
+const SavedBook = require('../models/savedBook');
 const authMiddleware = require('../middleware/authMiddleware'); // Ensure this middleware is correctly used
 const router = express.Router();
 
