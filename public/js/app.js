@@ -410,6 +410,33 @@ async function loadSavedBooks() {
 }
 function initializeAuth() {
   const form = $("#auth-form");
+  const params = new URLSearchParams(location.search);
+  const next = params.get("next");
+  if (next) {
+    const google = $("#google-auth");
+    google.href += "?next=" + encodeURIComponent(next);
+    const switchLink = $(".auth-switch a");
+    switchLink.href += "?next=" + encodeURIComponent(next);
+  }
+  const googleErrors = {
+    unavailable:
+      "Google sign-in is temporarily unavailable. You can still use email.",
+    cancelled:
+      "Google sign-in was cancelled. You can try again when you’re ready.",
+    failed: "We couldn’t complete Google sign-in. Please try again.",
+    account_missing:
+      "No FreeBooks account is linked to this Google account yet. Choose Create an account, then Sign up with Google.",
+    email_exists:
+      "This email already has a FreeBooks account. Please log in with its password. Your existing bookshelf has not been changed.",
+    unverified_email:
+      "Please use a Google account with a verified email address.",
+    expired: "Your sign-in expired. Please try again.",
+  };
+  const googleError = params.get("google_error");
+  if (googleError)
+    $("#google-message").textContent =
+      googleErrors[googleError] || googleErrors.failed;
+
   $("#toggle-password").addEventListener("click", (event) => {
     const input = $("#password"),
       show = input.type === "password";
@@ -435,12 +462,17 @@ function initializeAuth() {
       if (mode === "register") {
         message.classList.add("success");
         message.textContent = "Your account is ready. Taking you to log in…";
-        setTimeout(() => (location.href = "/login.html"), 900);
+        setTimeout(
+          () =>
+            (location.href =
+              "/login.html" +
+              (next ? "?next=" + encodeURIComponent(next) : "")),
+          900,
+        );
         return;
       }
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      const next = new URLSearchParams(location.search).get("next");
       location.href =
         next &&
         next.startsWith("/") &&

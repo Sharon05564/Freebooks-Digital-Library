@@ -118,6 +118,6 @@ document.querySelector(".menu-toggle").addEventListener("click", (event) => {
   document.querySelector(".header-inner").classList.toggle("menu-open", open);
 });
 document.getElementById("site-footer").innerHTML =
-  `<footer class="site-footer"><div class="footer-top"><div><a class="brand" href="/"><span class="brand-icon">${icon("book")}</span>FreeBooks<span class="brand-period">.</span></a><p>A world of stories. A shelf of your own.</p></div><nav aria-label="Footer navigation"><a href="/#library">Discover</a><a href="/about.html">Our story</a><a href="/contact.html">Say hello ${icon("arrow")}</a></nav></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} FreeBooks. Read a little further.</span><span>Books discovered through Google Books ${icon("external")}</span></div></footer>`;
+  `<footer class="site-footer"><div class="footer-top"><div><a class="brand" href="/"><span class="brand-icon">${icon("book")}</span>FreeBooks<span class="brand-period">.</span></a><p>A world of stories. A shelf of your own.</p></div><nav aria-label="Footer navigation"><a href="/#library">Discover</a><a href="/about.html">Our story</a><a href="/contact.html">Say hello ${icon("arrow")}</a><a href="/privacy.html">Privacy</a></nav></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} FreeBooks. Read a little further.</span><span>Books discovered through Google Books ${icon("external")}</span></div></footer>`;
 updateNavbar();
 hydrateIcons();

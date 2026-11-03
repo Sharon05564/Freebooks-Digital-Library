@@ -42,7 +42,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET || process.env.JWT_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { httpOnly: true, sameSite: 'lax', secure: isProduction }
+    cookie: { httpOnly: true, sameSite: 'lax', secure: isProduction, maxAge: 10 * 60 * 1000 }
 }));
 app.use(passport.initialize()); // Initialize Passport
 app.use(passport.session()); // Enable persistent login sessions

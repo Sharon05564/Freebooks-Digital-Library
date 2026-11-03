@@ -869,6 +869,45 @@ main {
   font-size: 15px;
   color: var(--muted);
 }
+.button-google {
+  width: 100%;
+  margin-top: 28px;
+  border: 1px solid #dfe1d6;
+  background: #fff;
+  color: var(--ink);
+  border-radius: 8px;
+  gap: 12px;
+  font-weight: 500;
+  min-height: 48px;
+}
+.google-message:not(:empty) {
+  margin-top: 14px;
+}
+.button-google:hover {
+  background: #f0f1e9;
+}
+.button-google svg {
+  width: 20px;
+  height: 20px;
+}
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--muted);
+  font-size: 12px;
+  margin: 22px 0 0;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: var(--line);
+}
+.auth-panel .stack-form {
+  margin-top: 22px;
+}
 .stack-form {
   display: flex;
   flex-direction: column;

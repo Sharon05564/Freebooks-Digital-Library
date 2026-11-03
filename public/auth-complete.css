@@ -1,0 +1,29 @@
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: #faf9f6;
+  color: #242820;
+  font:
+    16px/1.7 system-ui,
+    sans-serif;
+}
+main {
+  max-width: 32rem;
+  padding: 2rem;
+  text-align: center;
+}
+h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.15;
+  letter-spacing: -0.05em;
+  font-weight: 550;
+}
+p {
+  color: #686e61;
+}
+a {
+  color: inherit;
+  text-underline-offset: 4px;
+}
