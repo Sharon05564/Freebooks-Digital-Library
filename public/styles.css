@@ -1795,3 +1795,19 @@ main {
     row-gap: 12px;
   }
 }
+.cover-fallback > span {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+.cover-fallback small:last-child {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 380px) {
+  .cover-fallback > span {
+    -webkit-line-clamp: 3;
+  }
+}
