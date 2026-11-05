@@ -7,12 +7,13 @@ const {
   findCatalogBook,
 } = require("../services/recommendationEngine");
 const { evaluate } = require("../scripts/evaluate-recommendations");
-test("catalog has real unique source IDs, original descriptions, and public-domain source links", () => {
+test("catalog has real unique source IDs, original descriptions, and free source links", () => {
   assert.equal(catalog.length, 40);
   assert.equal(new Set(catalog.map((book) => book.id)).size, 40);
   for (const book of catalog) {
     assert.match(book.bookLink, /^https:\/\/www\.gutenberg\.org\/ebooks\/\d+$/);
-    assert.equal(book.publicDomainUSA, true);
+    assert.equal(typeof book.publicDomainUSA, "boolean");
+    assert.ok(book.rightsStatus);
     assert.ok(book.description.length > 80);
   }
 });
@@ -96,4 +97,14 @@ test("small labeled evaluation beats a fixed first-three baseline and preserves 
   assert.ok(metrics.hitRateAt3 >= 0.75);
   assert.ok(metrics.hitRateAt3 > metrics.baselineHitRateAt3);
   assert.ok(metrics.discoveryUniqueGenres >= 5);
+});
+
+test("free copyrighted translations are not labeled public domain", () => {
+  assert.equal(byId.get("pg5200").publicDomainUSA, false);
+  const result = recommend({ genres: ["fiction"], limit: 12 });
+  for (const volume of result.books)
+    assert.equal(
+      volume.accessInfo.publicDomain,
+      byId.get(volume.id).publicDomainUSA,
+    );
 });

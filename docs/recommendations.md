@@ -4,7 +4,7 @@ The initial recommender is a content-based TF-IDF model, not a generative chatbo
 
 ## Collection and provenance
 
-`data/recommendation-catalog.json` contains 40 selected Project Gutenberg classics. IDs, source titles, and creator names were checked against Project Gutenberg's official `pg_catalog.csv` machine-readable catalog; the Great Gatsby record was checked against ebook 64317. Project Gutenberg grants its catalog metadata to the public domain. The descriptions and thematic tags in this repository were written for FreeBooks. The app links to the source ebooks rather than importing book text. Public-domain status in this collection refers to the USA; source pages provide availability and copyright details.
+`data/recommendation-catalog.json` contains 40 selected Project Gutenberg classics. IDs, source titles, and creator names were checked against Project Gutenberg's official `pg_catalog.csv` machine-readable catalog; the Great Gatsby record was checked against ebook 64317. Project Gutenberg grants its catalog metadata to the public domain. The descriptions and thematic tags in this repository were written for FreeBooks. The app links to the source ebooks rather than importing book text. Rights are recorded per edition using the official RDF metadata. Free availability is not a blanket assertion that every translation is public domain; source pages provide the applicable copyright details.
 
 Sources:
 

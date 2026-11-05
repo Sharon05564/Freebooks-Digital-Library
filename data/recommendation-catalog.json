@@ -19,7 +19,8 @@
     "imageUrl": "/assets/covers/frankenstein.svg",
     "bookLink": "https://www.gutenberg.org/ebooks/84",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg1342",
@@ -42,7 +43,8 @@
     "imageUrl": "/assets/covers/pride.svg",
     "bookLink": "https://www.gutenberg.org/ebooks/1342",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg11",
@@ -65,7 +67,8 @@
     "imageUrl": "/assets/covers/alice.svg",
     "bookLink": "https://www.gutenberg.org/ebooks/11",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg2701",
@@ -89,7 +92,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/2701",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg1661",
@@ -112,7 +116,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/1661",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg345",
@@ -134,7 +139,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/345",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg98",
@@ -156,7 +162,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/98",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg174",
@@ -178,7 +185,8 @@
     "imageUrl": "/assets/covers/dorian.svg",
     "bookLink": "https://www.gutenberg.org/ebooks/174",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg1232",
@@ -200,7 +208,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/1232",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg43",
@@ -223,7 +232,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/43",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg76",
@@ -245,7 +255,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/76",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg74",
@@ -267,7 +278,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/74",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg120",
@@ -290,7 +302,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/120",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg5200",
@@ -312,7 +325,8 @@
     "imageUrl": "/assets/covers/metamorphosis.svg",
     "bookLink": "https://www.gutenberg.org/ebooks/5200",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": false,
+    "rightsStatus": "Copyrighted. Read the copyright notice inside this book for details."
   },
   {
     "id": "pg1260",
@@ -334,7 +348,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/1260",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg768",
@@ -356,7 +371,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/768",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg161",
@@ -378,7 +394,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/161",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg158",
@@ -400,7 +417,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/158",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg105",
@@ -423,7 +441,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/105",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg1727",
@@ -446,7 +465,8 @@
     "imageUrl": "/assets/covers/odyssey.svg",
     "bookLink": "https://www.gutenberg.org/ebooks/1727",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg64317",
@@ -468,7 +488,8 @@
     "imageUrl": "/assets/covers/gatsby.svg",
     "bookLink": "https://www.gutenberg.org/ebooks/64317",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg2554",
@@ -490,7 +511,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/2554",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg2600",
@@ -512,7 +534,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/2600",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg1184",
@@ -534,7 +557,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/1184",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg1400",
@@ -556,7 +580,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/1400",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg219",
@@ -578,7 +603,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/219",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg35",
@@ -601,7 +627,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/35",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg36",
@@ -623,7 +650,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/36",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg164",
@@ -646,7 +674,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/164",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg46",
@@ -668,7 +697,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/46",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg514",
@@ -690,7 +720,8 @@
     "imageUrl": "/assets/covers/little-women.svg",
     "bookLink": "https://www.gutenberg.org/ebooks/514",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg1998",
@@ -711,7 +742,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/1998",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg844",
@@ -733,7 +765,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/844",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg1514",
@@ -755,7 +788,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/1514",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg1080",
@@ -769,7 +803,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/1080",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg2814",
@@ -791,7 +826,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/2814",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg45",
@@ -813,7 +849,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/45",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg215",
@@ -834,7 +871,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/215",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg132",
@@ -856,7 +894,8 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/132",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   },
   {
     "id": "pg205",
@@ -878,6 +917,7 @@
     "imageUrl": "",
     "bookLink": "https://www.gutenberg.org/ebooks/205",
     "source": "Project Gutenberg",
-    "publicDomainUSA": true
+    "publicDomainUSA": true,
+    "rightsStatus": "Public domain in the USA."
   }
 ]

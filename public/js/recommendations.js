@@ -265,7 +265,7 @@
         document.getElementById("similar-title").textContent =
           "More like “" + data.context.seedTitle + "”.";
       document.getElementById("recommendation-note").textContent =
-        `Selected from our ${data.context.catalogSize}-book collection of public-domain classics from Project Gutenberg.`;
+        `Selected from our ${data.context.catalogSize}-book collection of free classics from Project Gutenberg.`;
       renderGenreChoices(data.availableGenres);
       if (basis === "discovery") {
         preferenceForm.hidden = false;

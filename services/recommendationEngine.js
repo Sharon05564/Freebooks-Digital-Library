@@ -150,7 +150,10 @@ function asVolume(book, reason) {
       imageLinks: book.imageUrl ? { thumbnail: book.imageUrl } : {},
       infoLink: book.bookLink,
     },
-    accessInfo: { webReaderLink: book.bookLink, publicDomain: true },
+    accessInfo: {
+      webReaderLink: book.bookLink,
+      publicDomain: book.publicDomainUSA === true,
+    },
     recommendation: { reason, source: book.source, genres: book.genres },
   };
 }
