@@ -92,6 +92,7 @@ function normalizeBook(book, saved = false) {
       }
     : {
         id: book.id,
+        recommendation: book.recommendation,
         title: info.title || "Untitled book",
         authors: info.authors?.join(", ") || "Author unknown",
         imageUrl: info.imageLinks?.thumbnail || "",
@@ -209,6 +210,7 @@ async function toggleSaved(button) {
       }
     });
     if (currentPage === "saved") await loadSavedBooks();
+    window.dispatchEvent(new Event("bookshelfchange"));
   } catch (error) {
     if (error.status === 401) {
       authExpired();

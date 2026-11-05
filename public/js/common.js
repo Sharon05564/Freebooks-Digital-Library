@@ -53,7 +53,7 @@ function notify(message) {
 function loginLink() {
   return (
     "/login.html?next=" +
-    encodeURIComponent(location.pathname + location.search)
+    encodeURIComponent(location.pathname + location.search + location.hash)
   );
 }
 function clearAuth() {
@@ -105,7 +105,7 @@ async function request(path, options = {}) {
 }
 const currentPage = document.body.dataset.page;
 document.getElementById("site-header").innerHTML =
-  `<div class="announcement"><span>A world of stories. Open to everyone.</span><a href="/about.html">Meet FreeBooks <span aria-hidden="true">↗</span></a></div><header class="site-header"><div class="header-inner"><a class="brand" href="/" aria-label="FreeBooks home"><span class="brand-icon">${icon("book")}</span>FreeBooks<span class="brand-period">.</span></a><nav class="main-nav" aria-label="Main navigation"><a href="/#library" ${currentPage === "search" ? 'aria-current="page"' : ""}>Discover</a><a href="/search.html?q=classic+literature">The classics</a><a href="/about.html" ${currentPage === "about" ? 'aria-current="page"' : ""}>Our story</a></nav><div class="nav-account" id="nav-account"></div><button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">${icon("menu")}</button></div></header>`;
+  `<div class="announcement"><span>A world of stories. Open to everyone.</span><a href="/about.html">Meet FreeBooks <span aria-hidden="true">↗</span></a></div><header class="site-header"><div class="header-inner"><a class="brand" href="/" aria-label="FreeBooks home"><span class="brand-icon">${icon("book")}</span>FreeBooks<span class="brand-period">.</span></a><nav class="main-nav" aria-label="Main navigation"><a href="/#library" ${currentPage === "search" ? 'aria-current="page"' : ""}>Discover</a><a href="/#recommendations">For you</a><a href="/search.html?q=classic+literature">The classics</a><a href="/about.html" ${currentPage === "about" ? 'aria-current="page"' : ""}>Our story</a></nav><div class="nav-account" id="nav-account"></div><button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">${icon("menu")}</button></div></header>`;
 document.querySelector(".menu-toggle").addEventListener("click", (event) => {
   const button = event.currentTarget,
     open = button.getAttribute("aria-expanded") !== "true";

@@ -9,6 +9,7 @@ const sendEmail = require('./services/email'); // Email utility
 const authRoutes = require('./routes/authRoutes'); // Authentication routes
 const bookRoutes = require('./routes/bookRoutes'); // Book search routes
 const savedRoutes = require('./routes/savedRoutes'); // Saved books routes
+const recommendationRoutes = require('./routes/recommendationRoutes');
 const profileRoutes = require('./routes/profileRoutes'); // Profile routes
 
 // Load environment variables
@@ -62,6 +63,7 @@ sequelize.authenticate()
 // Routes
 app.use('/auth', authRoutes); // Authentication routes
 app.use('/books', bookRoutes); // Book search routes
+app.use('/api', recommendationRoutes);
 app.use('/api', savedRoutes); // Saved books routes
 app.use('/', profileRoutes); // Profile routes (GET/PUT /profile)
 

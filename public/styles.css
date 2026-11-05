@@ -1587,3 +1587,211 @@ main {
     transform: none;
   }
 }
+
+/* Reading discovery and recommendation feedback */
+.recommendation-section {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 48px 48px 64px;
+  border-top: 1px solid var(--line);
+}
+.page-main > .recommendation-section {
+  padding: 44px 0 10px;
+  margin-top: 55px;
+}
+.recommendation-section .section-heading h2 {
+  max-width: 700px;
+}
+.preference-toggle {
+  background: transparent;
+  border: 0;
+  padding: 8px 0;
+  color: var(--ink);
+}
+.reading-preferences {
+  background: #f0f1e9;
+  border: 1px solid #e0e4d5;
+  border-radius: 14px;
+  padding: 24px;
+  margin-top: 28px;
+}
+.reading-preferences[hidden] {
+  display: none;
+}
+.reading-preferences fieldset {
+  padding: 0;
+  border: 0;
+  margin: 0;
+  min-width: 0;
+}
+.reading-preferences legend {
+  font: 600 20px var(--heading);
+  letter-spacing: -0.04em;
+}
+.reading-preferences fieldset > p {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 8px 0 18px;
+}
+.genre-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.genre-choice {
+  position: relative;
+  cursor: pointer;
+}
+.genre-choice input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.genre-choice span {
+  display: block;
+  background: var(--paper);
+  border: 1px solid #d6dccb;
+  padding: 8px 15px;
+  border-radius: 30px;
+  font-size: 14px;
+}
+.genre-choice input:checked + span {
+  color: white;
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.genre-choice input:focus-visible + span {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.preference-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  margin-top: 22px;
+}
+#preference-status {
+  color: var(--muted);
+  font-size: 13px;
+}
+.recommendation-note {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 24px 0;
+}
+.more-like-link {
+  display: inline-flex;
+  font-size: 13px;
+  margin-top: 13px;
+  color: #556545;
+  border-bottom: 1px solid #c6cfb8;
+}
+.more-like-link:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.book-info .recommendation-reason {
+  color: #616b58;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-top: 14px;
+  white-space: normal;
+}
+.recommendation-feedback {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 16px;
+}
+.recommendation-feedback button {
+  padding: 6px 10px;
+  background: transparent;
+  border: 1px solid #d8ddce;
+  border-radius: 20px;
+  font-size: 12px;
+}
+.recommendation-feedback button:hover,
+.recommendation-feedback button[aria-pressed="true"] {
+  background: #e7eadb;
+  border-color: #9cae86;
+}
+.recommendation-hidden > .book-art,
+.recommendation-hidden > .book-info {
+  visibility: hidden;
+}
+.feedback-undo {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  border: 1px dashed #ccd4bf;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+  background: #f0f1e9;
+}
+#similar-title {
+  max-width: 1000px;
+}
+@media (max-width: 1000px) {
+  .recommendation-section {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
+@media (max-width: 760px) {
+  .recommendation-section {
+    padding: 32px 22px 45px;
+  }
+  .recommendation-section .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .preference-toggle {
+    font-size: 14px;
+  }
+  .reading-preferences {
+    padding: 20px 16px;
+  }
+  .genre-options {
+    gap: 8px;
+  }
+  .genre-choice span {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  .recommendation-note {
+    font-size: 12px;
+  }
+  .recommendation-feedback {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .book-info .recommendation-reason {
+    font-size: 13px;
+  }
+}
+.reset-picks {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  padding: 8px;
+}
+@media (max-width: 760px) {
+  .menu-open .main-nav {
+    flex-wrap: wrap;
+    column-gap: 12px;
+    row-gap: 12px;
+  }
+}

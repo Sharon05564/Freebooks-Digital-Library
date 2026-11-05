@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/styles.css" />
     <script src="/js/common.js" defer></script>
     <script src="/js/app.js" defer></script>
+    <script src="/js/recommendations.js" defer></script>
   </head>
   <body data-page="saved">
     <a class="skip-link" href="#main">Skip to content</a>
@@ -30,6 +31,51 @@
         ></a>
       </div>
       <div id="savedBooks" class="book-grid" aria-live="polite"></div>
+      <section
+        class="recommendation-section"
+        id="recommendations"
+        aria-labelledby="recommendation-title"
+      >
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">FOLLOW YOUR NEXT CHAPTER</div>
+            <h2 id="recommendation-title">Find your next favorite.</h2>
+            <p id="recommendation-description">
+              A few stories to get to know your taste.
+            </p>
+          </div>
+          <button
+            class="text-link preference-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="reading-preferences"
+          >
+            Your reading interests <span data-icon="arrow"></span>
+          </button>
+        </div>
+        <form id="reading-preferences" class="reading-preferences" hidden>
+          <fieldset>
+            <legend>What do you reach for?</legend>
+            <p>Choose up to five genres. You can change these any time.</p>
+            <div id="genre-options" class="genre-options"></div>
+          </fieldset>
+          <div class="preference-actions">
+            <button class="button button-dark" type="submit">
+              Update my picks <span data-icon="arrow"></span></button
+            ><button class="reset-picks" type="button">Reset my picks</button
+            ><span id="preference-status" role="status"></span>
+          </div>
+        </form>
+        <p class="recommendation-note" id="recommendation-note">
+          Exploring our collection of 40 public-domain classics from Project
+          Gutenberg.
+        </p>
+        <div
+          class="book-grid"
+          id="recommendation-books"
+          aria-live="polite"
+        ></div>
+      </section>
     </main>
     <div id="site-footer"></div>
     <div id="toast" role="status" aria-live="polite"></div>
