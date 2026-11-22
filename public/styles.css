@@ -313,42 +313,43 @@ main {
   color: var(--muted);
 }
 .book-tunnel {
-  height: 275px;
+  --cover-width: 90px;
+  height: 290px;
   position: relative;
   margin: 6px auto 0;
   perspective: 1000px;
   isolation: isolate;
   max-width: 1700px;
-}
-.book-tunnel:after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 45px;
-  background: linear-gradient(transparent, var(--paper));
-  pointer-events: none;
+  touch-action: pan-y;
 }
 .tunnel-track {
   position: absolute;
-  inset: 0;
+  top: 44%;
+  left: 50%;
+  width: 0;
+  height: 0;
   transform-style: preserve-3d;
-  transform: translateX(var(--drift, 0px));
-  transition: transform 1s ease-out;
 }
 .tunnel-book {
   position: absolute;
-  top: 35px;
-  left: calc(50% - 69px);
-  width: 138px;
-  transform: translateX(calc(var(--i) * 155px))
-    translateY(calc(var(--distance) * -12px)) perspective(800px)
-    rotateY(calc(var(--i) * -11deg)) rotateZ(calc(var(--i) * 0.7deg))
-    scale(calc(1 + var(--distance) * 0.085));
-  transition: transform 0.5s;
-  transform-origin: center;
+  top: calc(var(--cover-width) * -0.7222);
+  left: calc(var(--cover-width) * -0.5);
+  width: var(--cover-width);
   filter: drop-shadow(3px 10px 7px #24282020);
+}
+.motion-toggle {
+  position: absolute;
+  bottom: 8px;
+  right: max(20px, calc((100% - 1200px) / 2));
+  z-index: 1;
+  border: 1px solid var(--line, #d9ddd4);
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: var(--paper);
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
 }
 .tunnel-book img {
   width: 100%;
@@ -1111,15 +1112,8 @@ main {
     padding-top: 68px;
   }
   .book-tunnel {
-    height: 345px;
-  }
-  .tunnel-book {
-    width: 155px;
-    left: calc(50% - 77px);
-    transform: translateX(calc(var(--i) * 175px))
-      translateY(calc(var(--distance) * -12px)) perspective(800px)
-      rotateY(calc(var(--i) * -11deg)) rotateZ(calc(var(--i) * 0.7deg))
-      scale(calc(1 + var(--distance) * 0.085));
+    --cover-width: 105px;
+    height: 330px;
   }
 }
 @media (max-width: 1000px) {
@@ -1278,17 +1272,9 @@ main {
     padding: 0 20px;
   }
   .book-tunnel {
-    height: 275px;
+    --cover-width: 85px;
+    height: 260px;
     margin-top: 6px;
-  }
-  .tunnel-book {
-    top: 55px;
-    width: 115px;
-    left: calc(50% - 57px);
-    transform: translateX(calc(var(--i) * 123px))
-      translateY(calc(var(--distance) * -9px)) perspective(800px)
-      rotateY(calc(var(--i) * -12deg)) rotateZ(calc(var(--i) * 0.7deg))
-      scale(calc(1 + var(--distance) * 0.08));
   }
   .hero-search {
     margin: 0 auto 40px;
@@ -1565,6 +1551,9 @@ main {
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .motion-toggle {
+    display: none;
+  }
   html {
     scroll-behavior: auto;
   }
@@ -1573,9 +1562,6 @@ main {
   *:after {
     animation: none !important;
     transition: none !important;
-  }
-  .tunnel-track {
-    transform: none;
   }
   .tunnel-book:hover {
     margin-top: 0;

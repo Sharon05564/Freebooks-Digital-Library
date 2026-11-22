@@ -221,6 +221,105 @@ async function toggleSaved(button) {
     button.disabled = false;
   }
 }
+function initializeBookTunnel(sequence) {
+  const hero = $(".book-tunnel");
+  const track = $("#hero-books");
+  const motionToggle = hero.querySelector(".motion-toggle");
+  // Repeat the covers so the stream can wrap beyond either viewport edge.
+  const books = [...sequence, ...sequence];
+  track.innerHTML = books.map((book) =>
+    `<a class="tunnel-book" href="${classicSearch(book)}" aria-label="Explore ${escapeHtml(book.title)}"><img src="/assets/covers/${book.slug}.svg" width="360" height="520" alt="${escapeHtml(book.title)}" draggable="false"></a>`,
+  ).join("");
+  const covers = [...track.children];
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  let offset = 0;
+  let spacing = 136;
+  let paused = false;
+  let hovered = false;
+  let focused = false;
+  let visible = true;
+  let frame = null;
+  let previousTime = null;
+  let drag = null;
+  let dragged = false;
+
+  function render() {
+    covers.forEach((cover, index) => {
+      const position = ((index + offset) % books.length + books.length) % books.length - books.length / 2;
+      // A concave ribbon: the edges come toward the reader, the center recedes.
+      const x = position * spacing * (1 - position * position * 0.008);
+      const depth = position * position * 22;
+      cover.style.transform = `translate3d(${x}px, 0, ${depth}px) rotateY(${-position * 9}deg) scale(${1 + Math.abs(position) * 0.07})`;
+      cover.style.visibility = Math.abs(position) > 5.5 ? "hidden" : "visible";
+    });
+  }
+  function tick(time) {
+    if (previousTime !== null) offset += Math.min(time - previousTime, 50) * 0.00026;
+    previousTime = time;
+    render();
+    frame = requestAnimationFrame(tick);
+  }
+  function updateMotion() {
+    if (frame !== null) cancelAnimationFrame(frame);
+    frame = null;
+    previousTime = null;
+    if (!paused && !hovered && !focused && !drag && visible && !document.hidden && !reducedMotion.matches) {
+      frame = requestAnimationFrame(tick);
+    }
+  }
+  function resize() {
+    spacing = parseFloat(getComputedStyle(hero).getPropertyValue("--cover-width")) + 8;
+    render();
+  }
+  motionToggle.addEventListener("click", () => {
+    paused = !paused;
+    motionToggle.setAttribute("aria-pressed", String(paused));
+    motionToggle.textContent = paused ? "Resume motion" : "Pause motion";
+    updateMotion();
+  });
+  hero.addEventListener("pointerover", (event) => {
+    hovered = event.pointerType === "mouse" && !!event.target.closest(".tunnel-book");
+    updateMotion();
+  });
+  hero.addEventListener("pointerleave", () => { hovered = false; updateMotion(); });
+  hero.addEventListener("focusin", () => { focused = true; updateMotion(); });
+  hero.addEventListener("focusout", (event) => {
+    focused = hero.contains(event.relatedTarget);
+    updateMotion();
+  });
+  hero.addEventListener("dragstart", (event) => event.preventDefault());
+  hero.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0 || event.target.closest("button")) return;
+    drag = { startX: event.clientX, startOffset: offset };
+    dragged = false;
+    updateMotion();
+  });
+  hero.addEventListener("pointermove", (event) => {
+    if (!drag) return;
+    const distance = event.clientX - drag.startX;
+    if (Math.abs(distance) > 6) {
+      dragged = true;
+      hero.setPointerCapture(event.pointerId);
+      offset = drag.startOffset + distance / spacing;
+      render();
+    }
+  });
+  function endDrag() { drag = null; updateMotion(); }
+  hero.addEventListener("pointerup", endDrag);
+  hero.addEventListener("pointercancel", endDrag);
+  hero.addEventListener("lostpointercapture", endDrag);
+  hero.addEventListener("click", (event) => {
+    if (dragged && event.target.closest(".tunnel-book")) event.preventDefault();
+    dragged = false;
+  }, true);
+  document.addEventListener("visibilitychange", updateMotion);
+  reducedMotion.addEventListener("change", updateMotion);
+  new ResizeObserver(resize).observe(hero);
+  new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; updateMotion(); }).observe(hero);
+  resize();
+  updateMotion();
+}
+
 function initializeHome() {
   const sequence = [
     classics[4],
@@ -231,30 +330,9 @@ function initializeHome() {
     classics[3],
     classics[5],
     classics[7],
-    classics[4],
   ];
-  $("#hero-books").innerHTML = sequence
-    .map(
-      (book, index) =>
-        `<a class="tunnel-book" href="${classicSearch(book)}" style="--i:${index - 4};--distance:${Math.abs(index - 4)}" aria-label="Explore ${escapeHtml(book.title)}"><img src="/assets/covers/${book.slug}.svg" width="360" height="520" alt="${escapeHtml(book.title)}"></a>`,
-    )
-    .join("");
+  initializeBookTunnel(sequence);
   $("#home-books").innerHTML = curatedCards();
-  const hero = $(".book-tunnel");
-  if (
-    !matchMedia("(prefers-reduced-motion: reduce)").matches &&
-    matchMedia("(pointer:fine)").matches
-  ) {
-    hero.addEventListener("pointermove", (event) =>
-      hero.style.setProperty(
-        "--drift",
-        `${(event.clientX / innerWidth - 0.5) * 22}px`,
-      ),
-    );
-    hero.addEventListener("pointerleave", () =>
-      hero.style.setProperty("--drift", "0px"),
-    );
-  }
   document.querySelectorAll("[data-category]").forEach((button) =>
     button.addEventListener("click", async () => {
       const id = ++homeRequest;
