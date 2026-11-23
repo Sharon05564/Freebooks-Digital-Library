@@ -268,7 +268,7 @@ function initializeBookTunnel(sequence) {
     }
   }
   function resize() {
-    spacing = parseFloat(getComputedStyle(hero).getPropertyValue("--cover-width")) + 8;
+    spacing = parseFloat(getComputedStyle(covers[0]).width) + 8;
     render();
   }
   motionToggle.addEventListener("click", () => {
