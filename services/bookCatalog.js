@@ -1,6 +1,7 @@
 const axios = require('axios');
 
 const SOURCES = { google: 'Google Books', gutendex: 'Project Gutenberg', openlibrary: 'Open Library' };
+const ACTIVE_SOURCES = Object.freeze(['google', 'openlibrary']);
 const CATEGORIES = new Set(['fiction', 'fantasy', 'science', 'history', 'poetry']);
 const PAGE_SIZE = 12;
 const words = value => String(value || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
@@ -67,7 +68,7 @@ function normalizeOpenLibrary(book) {
     accessInfo: {},
   };
 }
-function createBookCatalog({ get = axios.get, now = Date.now, wait = ms => new Promise(resolve => setTimeout(resolve, ms)) } = {}) {
+function createBookCatalog({ get = axios.get, now = Date.now, wait = ms => new Promise(resolve => setTimeout(resolve, ms)), enableGutenberg = false } = {}) {
   const cache = new Map(), pending = new Map();
   const gutenbergBase = (process.env.GUTENDEX_BASE_URL || 'https://gutendex.com').replace(/\/+$/, '');
   let openLibraryTail = Promise.resolve(), openLibraryNext = 0, queued = 0;
@@ -136,7 +137,10 @@ function createBookCatalog({ get = axios.get, now = Date.now, wait = ms => new P
     return { books, hasMore: offset + PAGE_SIZE < (data.numFound ?? data.num_found ?? 0) };
   }
   async function search({ q, category = '', source = 'all', page = 1, access = 'all' }) {
-    const names = source === 'all' ? Object.keys(SOURCES) : [source];
+    const active = enableGutenberg ? Object.keys(SOURCES) : ACTIVE_SOURCES;
+    // Keep old Gutenberg search links usable while the provider is disabled.
+    if (source === 'gutendex' && !enableGutenberg) source = 'all';
+    const names = source === 'all' ? active : [source];
     const settled = await Promise.allSettled(names.map(name => provider(name, { q, category, page, access })));
     const groups = {}, providers = [];
     let hasMore = false;
@@ -153,6 +157,7 @@ function createBookCatalog({ get = axios.get, now = Date.now, wait = ms => new P
   }
   async function resolve(id) {
     if (/^pg\d+$/.test(id)) {
+      if (!enableGutenberg) return null;
       if (!Number.isSafeInteger(Number(id.slice(2))) || Number(id.slice(2)) < 1) return null;
       const data = await fetchJSON(`${gutenbergBase}/books/${Number(id.slice(2))}`);
       return normalizeGutenberg(data);
@@ -169,4 +174,4 @@ function createBookCatalog({ get = axios.get, now = Date.now, wait = ms => new P
   return { search, resolve };
 }
 const catalog = createBookCatalog();
-module.exports = { ...catalog, createBookCatalog, normalizeGutenberg, normalizeOpenLibrary, mergeBooks, SOURCES, CATEGORIES };
+module.exports = { ...catalog, createBookCatalog, normalizeGutenberg, normalizeOpenLibrary, mergeBooks, SOURCES, ACTIVE_SOURCES, CATEGORIES };

@@ -26,7 +26,7 @@ test('discovery forwards only bounded filters and returns a cacheable public res
   const response = await fetch(`${origin}/books/discover?q=%20Austen%20&source=gutendex&category=fiction&page=2&access=free&userId=123`);
   assert.equal(response.status, 200);
   assert.equal(response.headers.get('cache-control'), 'public, max-age=60');
-  assert.deepEqual(searches.at(-1), { q: 'Austen', source: 'gutendex', category: 'fiction', page: 2, access: 'free' });
+  assert.deepEqual(searches.at(-1), { q: 'Austen', source: 'all', category: 'fiction', page: 2, access: 'free' });
 });
 test('discovery does not expose upstream error details', async () => {
   const response = await fetch(`${origin}/books/discover?q=failure`);

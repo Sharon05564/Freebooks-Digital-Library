@@ -424,6 +424,10 @@ async function loadSearch() {
 }
 function initializeSearch() {
   const params = new URLSearchParams(location.search);
+  if (params.get("source") === "gutendex") {
+    params.set("source", "all");
+    history.replaceState(null, "", location.pathname + "?" + params);
+  }
   function syncFilter(name, value) {
     let field = $(".search-form input[name=" + name + "]");
     if (!field) {

@@ -28,7 +28,7 @@ test('cross-source duplicate titles prefer Gutenberg and retain distinct works',
 });
 test('Gutendex pagination crosses a 32-book API boundary without skipping or repeating', async () => {
   const calls = [];
-  const catalog = createBookCatalog({ get: async (url, { params }) => {
+  const catalog = createBookCatalog({ enableGutenberg: true, get: async (url, { params }) => {
     calls.push(params.page);
     const start = (params.page - 1) * 32;
     return { data: { count: 70, next: 'https://untrusted.example/do-not-follow', results: Array.from({ length: Math.min(32, 70 - start) }, (_, i) => pg(start + i + 1)) } };
@@ -43,7 +43,7 @@ test('Gutendex pagination crosses a 32-book API boundary without skipping or rep
   assert.equal(last.hasMore, false);
 });
 test('a provider failure still returns other providers with an explicit warning status', async () => {
-  const catalog = createBookCatalog({ get: async url => {
+  const catalog = createBookCatalog({ enableGutenberg: true, get: async url => {
     if (url.includes('googleapis')) throw new Error('Quota exceeded');
     if (url.includes('openlibrary')) return { data: { docs: [ol(1)], numFound: 1 } };
     return { data: { results: [pg(2)], count: 1, next: null } };
@@ -55,14 +55,14 @@ test('a provider failure still returns other providers with an explicit warning 
 });
 test('all provider failures reject; no failed result is cached', async () => {
   let calls = 0;
-  const catalog = createBookCatalog({ get: async () => { calls++; throw new Error('Offline'); } });
+  const catalog = createBookCatalog({ enableGutenberg: true, get: async () => { calls++; throw new Error('Offline'); } });
   await assert.rejects(catalog.search({ q: 'books', source: 'gutendex' }));
   await assert.rejects(catalog.search({ q: 'books', source: 'gutendex' }));
   assert.equal(calls, 2);
 });
 test('concurrent identical requests coalesce, cache expires, and filters stay in the key', async () => {
   let calls = 0, time = 0;
-  const catalog = createBookCatalog({ now: () => time, get: async () => { calls++; return { data: { count: 1, results: [pg(1)] } }; } });
+  const catalog = createBookCatalog({ enableGutenberg: true, now: () => time, get: async () => { calls++; return { data: { count: 1, results: [pg(1)] } }; } });
   await Promise.all([catalog.search({ q: 'books', source: 'gutendex' }), catalog.search({ q: 'books', source: 'gutendex' })]);
   assert.equal(calls, 1);
   await catalog.search({ q: 'books', source: 'gutendex', category: 'history' });
@@ -73,7 +73,7 @@ test('concurrent identical requests coalesce, cache expires, and filters stay in
 });
 test('free availability queries exclude unconfirmed Open Library entries', async () => {
   let query;
-  const catalog = createBookCatalog({ get: async (url, { params }) => {
+  const catalog = createBookCatalog({ enableGutenberg: true, get: async (url, { params }) => {
     query = params.q;
     return { data: { docs: [ol(1), ol(2, 'Free', { ebook_access: 'public' })], numFound: 2 } };
   } });
@@ -83,7 +83,7 @@ test('free availability queries exclude unconfirmed Open Library entries', async
 });
 test('new provider book IDs resolve for More like this without being sent to Google', async () => {
   const calls = [];
-  const catalog = createBookCatalog({ wait: async () => {}, get: async url => {
+  const catalog = createBookCatalog({ enableGutenberg: true, wait: async () => {}, get: async url => {
     calls.push(url);
     return { data: url.includes('gutendex') ? pg(9999) : { title: 'Another book', subjects: ['Fantasy'], description: { value: 'A journey' } } };
   } });
@@ -91,4 +91,19 @@ test('new provider book IDs resolve for More like this without being sent to Goo
   assert.equal((await catalog.resolve('ol-OL123W')).volumeInfo.description, 'A journey');
   assert.equal(await catalog.resolve('ol-https://evil.example'), null);
   assert.ok(calls.every(url => !url.includes('googleapis')));
+});
+
+test('disabled Gutenberg is never queried, including legacy searches and seed lookups', async () => {
+  const calls = [];
+  const catalog = createBookCatalog({ get: async url => {
+    calls.push(url);
+    assert.doesNotMatch(url, /gutendex/);
+    return { data: url.includes('googleapis') ? { items: [] } : { docs: [ol(1)], numFound: 1 } };
+  } });
+  const result = await catalog.search({ q: 'pride', source: 'all' });
+  assert.deepEqual(result.providers.map(provider => provider.id), ['google', 'openlibrary']);
+  assert.equal(result.books.length, 1);
+  assert.equal((await catalog.search({ q: 'pride', source: 'gutendex' })).books.length, 1);
+  assert.equal(await catalog.resolve('pg9999'), null);
+  assert.equal(calls.length, 2);
 });

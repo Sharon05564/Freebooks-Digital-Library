@@ -1,5 +1,14 @@
 # Multi-source book discovery
 
+Gutenberg/Gutendex is temporarily disabled (November 24, 2026). Public searches
+query only Google Books and Open Library. The source selector and discovery
+credits omit Gutenberg; old `source=gutendex` links fall back to all active
+sources. Unknown Gutenberg seed IDs do not make API requests. The existing
+40-book offline recommendation catalog and saved reading links still work.
+The Gutendex adapter remains for later restoration; its fixture tests explicitly
+opt in with `enableGutenberg: true`.
+
+
 `GET /books/discover?q=Austen&source=all&access=all&page=1&category=fiction`
 returns `{books, page, hasMore, providers}`. Sources are `all`, `google`,
 `gutendex`, or `openlibrary`. Availability is `all` or `free`; categories are
