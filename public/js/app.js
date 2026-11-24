@@ -81,29 +81,27 @@ function curatedCards() {
 function normalizeBook(book, saved = false) {
   const info = book.volumeInfo || {};
   const access = book.accessInfo || {};
-  return saved
-    ? {
-        id: book.bookId,
-        title: book.title,
-        authors: book.authors,
-        imageUrl: book.imageUrl,
-        bookLink: safeUrl(book.bookLink),
-        category: "On your bookshelf",
-      }
-    : {
-        id: book.id,
-        recommendation: book.recommendation,
-        title: info.title || "Untitled book",
-        authors: info.authors?.join(", ") || "Author unknown",
-        imageUrl: info.imageLinks?.thumbnail || "",
-        bookLink: safeUrl(
-          access.webReaderLink || info.previewLink || info.infoLink,
-        ),
-        category: info.categories?.[0] || "Free ebook",
-      };
+  const link = safeUrl(saved ? book.bookLink : access.webReaderLink || info.previewLink || info.infoLink);
+  const host = link ? new URL(link).hostname : "";
+  const source = book.source || ((host === "openlibrary.org" || host.endsWith(".openlibrary.org")) ? "openlibrary" :
+    /^pg\d+$/.test(saved ? book.bookId : book.id) || (host === "gutenberg.org" || host.endsWith(".gutenberg.org")) ? "gutendex" : "google");
+  return {
+    id: saved ? book.bookId : book.id,
+    recommendation: book.recommendation,
+    title: saved ? book.title : info.title || "Untitled book",
+    authors: saved ? book.authors : info.authors?.join(", ") || "Author unknown",
+    imageUrl: saved ? book.imageUrl : info.imageLinks?.thumbnail || "",
+    bookLink: link,
+    category: saved ? "On your bookshelf" : info.categories?.[0] || "Books",
+    source,
+    sourceLabel: book.sourceLabel || ({google: "Google Books", gutendex: "Project Gutenberg", openlibrary: "Open Library"})[source],
+    availability: book.availability || (source === "openlibrary" ? "catalog" : "free"),
+    actionLabel: book.actionLabel || (source === "openlibrary" ? "View editions" : "Read book"),
+    downloadLink: safeUrl(book.downloadLink),
+  };
 }
 function coverFallback(book) {
-  return `<span class="cover-fallback"><small>FREEBOOKS<br>THE OPEN LIBRARY</small><span>${escapeHtml(book.title.slice(0, 80))}</span><small>${escapeHtml(book.authors.slice(0, 50))}</small></span>`;
+  return `<span class="cover-fallback"><small>FREEBOOKS<br>DIGITAL LIBRARY</small><span>${escapeHtml(book.title.slice(0, 80))}</span><small>${escapeHtml(book.authors.slice(0, 50))}</small></span>`;
 }
 function renderBooks(container, rawBooks, saved = false) {
   const books = rawBooks.map((book) => normalizeBook(book, saved));
@@ -127,7 +125,7 @@ function renderBooks(container, rawBooks, saved = false) {
       const link =
         book.bookLink ||
         classicSearch({ title: book.title, author: book.authors });
-      return `<article class="book-card"><div class="book-art"><a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" aria-label="Read ${escapeHtml(book.title)} (opens in a new tab)">${image ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(book.title)} cover" loading="lazy">` : coverFallback(book)}<span class="card-arrow">${icon("external")}</span></a><button class="save-book" data-book-id="${escapeHtml(book.id)}" data-remove="${saved}" aria-label="${saved || savedIds.has(book.id) ? "Remove" : "Save"} ${escapeHtml(book.title)}${saved || savedIds.has(book.id) ? " from" : " to"} your bookshelf" aria-pressed="${saved || savedIds.has(book.id)}">${icon("bookmark")}</button></div><div class="book-info"><div class="book-meta">${escapeHtml(book.category.slice(0, 45))}</div><h3><a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(book.title)}</a></h3><p>${escapeHtml(book.authors)}</p></div></article>`;
+      return `<article class="book-card"><div class="book-art"><a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(book.actionLabel)}: ${escapeHtml(book.title)} (opens in a new tab)">${image ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(book.title)} cover" loading="lazy">` : coverFallback(book)}<span class="card-arrow">${icon("external")}</span></a><button class="save-book" data-book-id="${escapeHtml(book.id)}" data-remove="${saved}" aria-label="${saved || savedIds.has(book.id) ? "Remove" : "Save"} ${escapeHtml(book.title)}${saved || savedIds.has(book.id) ? " from" : " to"} your bookshelf" aria-pressed="${saved || savedIds.has(book.id)}">${icon("bookmark")}</button></div><div class="book-info"><div class="book-meta">${escapeHtml(book.category.slice(0, 45))}</div><h3><a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(book.title)}</a></h3><p>${escapeHtml(book.authors)}</p><div class="book-source"><span>${escapeHtml(book.sourceLabel)}</span><span class="availability-label${book.availability === "catalog" ? " is-catalog" : ""}">${book.availability === "catalog" ? "Catalog listing" : book.source === "openlibrary" ? "Free edition available" : "Free to read"}</span></div>${book.downloadLink ? `<a class="download-link" href="${escapeHtml(book.downloadLink)}" target="_blank" rel="noopener noreferrer">Download EPUB ${icon("external")}</a>` : ""}</div></article>`;
     })
     .join("");
   container.querySelectorAll(".book-art img").forEach((img) =>
@@ -377,33 +375,44 @@ async function loadSearch() {
     : "Explore the library.";
   activeCategory = params.get("category") || "";
   $("#categorySelect").value = activeCategory;
+  $("#sourceSelect").value = params.get("source") || "all";
+  $("#accessSelect").value = params.get("access") || "all";
+  $("#source-status").textContent = "";
   const container = $("#results");
   skeleton(container, 8);
   $("#result-summary").textContent = "Finding your next read…";
   $("#prevBtn").disabled = true;
   $("#nextBtn").disabled = true;
   currentSearchController?.abort();
-  currentSearchController = new AbortController();
+  const controller = new AbortController();
+  currentSearchController = controller;
   try {
-    const books = await request(
-      "/books/search?" +
+    const result = await request(
+      "/books/discover?" +
         new URLSearchParams({
           q: query,
           category: activeCategory,
-          startIndex: offset,
-          maxResults: pageSize,
+          page: offset / pageSize + 1,
+          source: $("#sourceSelect").value,
+          access: $("#accessSelect").value,
         }),
-      { signal: currentSearchController.signal },
+      { signal: controller.signal },
     );
+    if (controller.signal.aborted || currentSearchController !== controller) return;
+    const books = result.books;
     renderBooks(container, books);
+    const unavailable = result.providers.filter(provider => provider.status === "unavailable");
+    $("#source-status").textContent = unavailable.length
+      ? `${unavailable.map(provider => provider.label).join(" and ")} temporarily unavailable. Showing the other sources; try again to include missing results.`
+      : "Catalog listings show book information and editions; full text may not be free. Free editions can vary by country.";
     $("#result-summary").textContent = books.length
-      ? `${offset + 1}–${offset + books.length} · Free ebooks for curious minds`
+      ? `${books.length} books · Page ${offset / pageSize + 1}`
       : "No books found";
     $("#prevBtn").disabled = offset === 0;
-    $("#nextBtn").disabled = books.length < pageSize;
+    $("#nextBtn").disabled = !result.hasMore;
     $("#page-number").textContent = "Page " + (offset / pageSize + 1);
   } catch (error) {
-    if (error.name === "AbortError") return;
+    if (error.name === "AbortError" || currentSearchController !== controller) return;
     container.removeAttribute("aria-busy");
     container.innerHTML = stateHTML(
       "A pause between chapters.",
@@ -415,13 +424,18 @@ async function loadSearch() {
 }
 function initializeSearch() {
   const params = new URLSearchParams(location.search);
-  if (params.get("category")) {
-    const field = document.createElement("input");
-    field.type = "hidden";
-    field.name = "category";
-    field.value = params.get("category");
-    $(".search-form").append(field);
+  function syncFilter(name, value) {
+    let field = $(".search-form input[name=" + name + "]");
+    if (!field) {
+      field = document.createElement("input");
+      field.type = "hidden";
+      field.name = name;
+      $(".search-form").append(field);
+    }
+    field.value = value;
   }
+  for (const name of ["category", "source", "access"])
+    if (params.has(name)) syncFilter(name, params.get(name));
   $("#prevBtn").addEventListener("click", () => {
     offset = Math.max(0, offset - pageSize);
     loadSearch();
@@ -432,24 +446,17 @@ function initializeSearch() {
     loadSearch();
     $("#results").scrollIntoView({ block: "start" });
   });
-  $("#categorySelect").addEventListener("change", (event) => {
-    const url = new URL(location.href);
-    if (event.target.value)
-      url.searchParams.set("category", event.target.value);
-    else url.searchParams.delete("category");
-    history.replaceState(null, "", url);
-    let hidden = $(".search-form input[name=category]");
-    if (hidden) hidden.value = event.target.value;
-    else {
-      hidden = document.createElement("input");
-      hidden.type = "hidden";
-      hidden.name = "category";
-      hidden.value = event.target.value;
-      $(".search-form").append(hidden);
-    }
-    offset = 0;
-    loadSearch();
-  });
+  for (const [id, name] of [["categorySelect", "category"], ["sourceSelect", "source"], ["accessSelect", "access"]]) {
+    $("#" + id).addEventListener("change", (event) => {
+      const url = new URL(location.href);
+      if (event.target.value) url.searchParams.set(name, event.target.value);
+      else url.searchParams.delete(name);
+      history.replaceState(null, "", url);
+      syncFilter(name, event.target.value);
+      offset = 0;
+      loadSearch();
+    });
+  }
   loadSearch();
   loadSavedIds();
 }

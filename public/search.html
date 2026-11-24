@@ -35,6 +35,7 @@
             id="searchBar"
             name="q"
             type="search"
+            maxlength="200"
             placeholder="Search by title or author"
             required
             autocomplete="off"
@@ -46,7 +47,23 @@
       <div class="results-toolbar">
         <span id="result-summary" aria-live="polite"
           >Finding your next read…</span
-        ><label class="select-label"
+        >
+        <div class="search-filters">
+          <label class="select-label">Source
+            <select id="sourceSelect">
+              <option value="all">All sources</option>
+              <option value="gutendex">Project Gutenberg</option>
+              <option value="google">Google Books</option>
+              <option value="openlibrary">Open Library</option>
+            </select>
+          </label>
+          <label class="select-label">Availability
+            <select id="accessSelect">
+              <option value="all">All availability</option>
+              <option value="free">Free to read</option>
+            </select>
+          </label>
+        <label class="select-label"
           >Category
           <select id="categorySelect">
             <option value="">All books</option>
@@ -57,7 +74,9 @@
             <option value="poetry">Poetry</option>
           </select></label
         >
+        </div>
       </div>
+      <p id="source-status" class="source-status" role="status"></p>
       <div id="results" class="book-grid" aria-live="polite"></div>
       <nav class="pagination" aria-label="Search pages">
         <button id="prevBtn" class="button button-outline">← Previous</button

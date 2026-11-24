@@ -1845,3 +1845,19 @@ main {
     -webkit-line-clamp: 3;
   }
 }
+
+/* Shared catalog sources and edition availability. */
+.search-filters { display: flex; flex-wrap: wrap; gap: 12px 20px; }
+.results-toolbar { flex-wrap: wrap; }
+.source-status { color: var(--muted); font-size: 14px; margin: -10px 0 28px; }
+.source-status:empty { display: none; }
+.book-source { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 9px; margin-top: 12px; font-size: 12px; color: var(--muted); }
+.availability-label { background: #e8f0fb; color: #244e83; padding: 3px 8px; border-radius: 20px; }
+.availability-label.is-catalog { background: #f0f2f5; color: #566477; }
+.download-link { display: inline-flex; align-items: center; gap: 6px; color: #315e97; font-size: 13px; margin-top: 10px; text-decoration: underline; text-underline-offset: 3px; }
+.download-link svg { width: 13px; height: 13px; }
+@media (max-width: 760px) {
+  .search-filters { width: 100%; gap: 12px; }
+  .search-filters .select-label { flex: 1 1 140px; flex-direction: column; align-items: flex-start; gap: 4px; }
+  .search-filters select { max-width: 100%; width: 100%; }
+}

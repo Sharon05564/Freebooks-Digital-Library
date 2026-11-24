@@ -3,6 +3,7 @@ const axios = require('axios');
 require('dotenv').config(); // Load environment variables
 
 const router = express.Router();
+router.use(require('./catalogRouter')(require('../services/bookCatalog')));
 
 // Search books with pagination and category filtering
 router.get('/search', async (req, res) => {

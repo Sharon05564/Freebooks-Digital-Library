@@ -3,6 +3,11 @@ const { byId } = require("./recommendationEngine");
 const cache = new Map();
 async function resolveSeed(id) {
   if (byId.has(id)) return byId.get(id);
+  if (typeof id === "string" && (/^pg\d+$/.test(id) || /^ol-OL\d+W$/.test(id))) {
+    const volume = await require("./bookCatalog").resolve(id);
+    if (!volume?.volumeInfo) return null;
+    return { id, ...volume.volumeInfo };
+  }
   if (
     typeof id !== "string" ||
     !/^[A-Za-z0-9_-]{1,100}$/.test(id) ||
